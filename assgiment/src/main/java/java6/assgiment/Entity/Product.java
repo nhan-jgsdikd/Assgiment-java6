@@ -1,4 +1,4 @@
-package java6.assgiment.Entity; 
+package java6.assgiment.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,23 +8,23 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class User {
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(columnDefinition = "VARCHAR(255)")
-    private String email;
+    private String classify;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
     @Column(columnDefinition = "VARCHAR(255)")
-    private String img;
+    private String nameProduct;
 
     @Column(columnDefinition = "VARCHAR(255)")
-    private String password;
+    private String photo;
 
-    @Column(columnDefinition = "VARCHAR(255)")
-    private String role;
-
-    @Column(columnDefinition = "VARCHAR(255)")
-    private String username;
+    @Column(columnDefinition = "DOUBLE")
+    private double price;
 }

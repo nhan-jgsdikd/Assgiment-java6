@@ -9,10 +9,5 @@ import ch.qos.logback.core.model.Model;
 
 @Controller
 public class homecontroller {
-
-    @GetMapping("/")
-    public String index(Model model) {
-        return "Dashboard/index";
     }
-    
-}
+  
