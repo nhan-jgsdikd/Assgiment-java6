@@ -11,8 +11,18 @@ import ch.qos.logback.core.model.Model;
 public class index {
 
     @GetMapping("/")
-    public String index(Model model) {
+    public String showIndex(Model model) {
         return "Dashboard/index";
+    }
+    
+    @GetMapping("/product")
+    public String Product(Model model) {
+        return "Dashboard/Products";
+    }
+
+    @GetMapping("/cart")
+    public String Cart(Model model) {
+        return "Dashboard/Cart";
     }
     
 }
