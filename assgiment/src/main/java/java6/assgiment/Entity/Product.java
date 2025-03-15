@@ -14,17 +14,18 @@ public class Product {
     private Long id;
 
     @Column(columnDefinition = "VARCHAR(255)")
-    private String classify;
+    private String nameProduct;
 
     @Column(columnDefinition = "TEXT")
     private String description;
-
-    @Column(columnDefinition = "VARCHAR(255)")
-    private String nameProduct;
 
     @Column(columnDefinition = "VARCHAR(255)")
     private String photo;
 
     @Column(columnDefinition = "DOUBLE")
     private double price;
+
+    @Column(columnDefinition = "VARCHAR(255)")
+    private String classify;
+
 }
