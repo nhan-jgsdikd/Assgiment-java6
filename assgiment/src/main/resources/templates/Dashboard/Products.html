@@ -2,34 +2,47 @@
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{/Navar/Layout :: view(~{::main})}">
 <body>
     <main class="content">
-        <link rel="stylesheet" href="css/Product.css">
-
+        <link rel="stylesheet" href="css/product.css">
         <!-- Phần điều khiển -->
-        <div class="product-controls">
-            <h1>Tất cả sản phẩm</h1>
-            <div class="filter-section">
-                <select class="filter-select">
-                    <option>Sắp xếp theo</option>
-                    <option>Giá tăng dần</option>
-                    <option>Giá giảm dần</option>
-                    <option>Mới nhất</option>
-                </select>
-                <select class="filter-select">
-                    <option>Danh mục</option>
-                    <option>Chăm sóc da</option>
-                    <option>Trang điểm</option>
-                    <option>Chăm sóc tóc</option>
-                </select>
-                <input type="text" class="search-box" placeholder="Tìm kiếm sản phẩm...">
-            </div>
-        </div>
+        <form id="sortForm" method="get" th:action="@{/product}">
+            <input type="hidden" name="classify" th:value="${selectedClassify}">
+            <input type="hidden" name="search" th:value="${searchQuery}">
+            <select class="filter-select" name="sort" onchange="this.form.submit()">
+                <option value="default" th:selected="${selectedSort == 'default'}">Tất cả sản phẩm</option>
+                <option value="price-asc" th:selected="${selectedSort == 'price-asc'}">Giá tăng dần</option>
+                <option value="price-desc" th:selected="${selectedSort == 'price-desc'}">Giá giảm dần</option>
+                <option value="newest" th:selected="${selectedSort == 'newest'}">Mới nhất</option>
+            </select>
+        </form>
+
+        <form id="classifyForm" method="get" th:action="@{/product}">
+            <input type="hidden" name="sort" th:value="${selectedSort}">
+            <input type="hidden" name="search" th:value="${searchQuery}">
+            <select class="filter-select" name="classify" onchange="this.form.submit()">
+                <option value="" th:selected="${selectedClassify == ''}">Danh mục</option>
+                <option value="perfume" th:selected="${selectedClassify == 'perfume'}">Chăm sóc da</option>
+                <option value="lipstick" th:selected="${selectedClassify == 'lipstick'}">Trang điểm</option>
+                <option value="foundation" th:selected="${selectedClassify == 'foundation'}">Chăm sóc tóc</option>
+            </select>
+        </form>
+
+        <form id="searchForm" method="get" th:action="@{/product}">
+            <input type="hidden" name="sort" th:value="${selectedSort}">
+            <input type="hidden" name="classify" th:value="${selectedClassify}">
+            <input type="text" class="search-box" name="search" placeholder="Tìm kiếm sản phẩm..." th:value="${searchQuery}">
+            <button type="submit">Tìm kiếm</button>
+        </form>
 
         <!-- Danh sách sản phẩm -->
         <section class="featured-products">
             <div class="product-list">
                 <div class="product-item" th:each="product : ${products}">
                     <span class="product-badge" th:text="${product.classify}"></span>
-                    <img th:src="@{${product.photo}}" th:alt="${product.nameProduct}">
+                    <img th:src="@{${product.photo}}" 
+                         th:alt="${product.nameProduct}" 
+                         data-bs-toggle="modal" 
+                         data-bs-target="#productModal" 
+                         th:attr="data-product-id=${product.id}, data-product-description=${product.description}">
                     <h3 th:text="${product.nameProduct}"></h3>
                     <p th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')} + ' VND'"></p>
                     <button>Thêm vào giỏ</button>
@@ -39,12 +52,75 @@
 
         <!-- Phân trang -->
         <div class="pagination">
-            <span class="page-item">1</span>
-            <span class="page-item">2</span>
-            <span class="page-item">3</span>
-            <span class="page-item">...</span>
-            <span class="page-item">10</span>
+            <a th:if="${currentPage > 0}" 
+               th:href="@{/product(page=${currentPage - 1}, size=12, sort=${selectedSort}, classify=${selectedClassify}, search=${searchQuery})}" 
+               class="page-item">«</a>
+            <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+               th:href="@{/product(page=${i}, size=12, sort=${selectedSort}, classify=${selectedClassify}, search=${searchQuery})}"
+               th:class="${i == currentPage} ? 'page-item active' : 'page-item'"
+               th:text="${i + 1}"></a>
+            <a th:if="${currentPage < totalPages - 1}"
+               th:href="@{/product(page=${currentPage + 1}, size=12, sort=${selectedSort}, classify=${selectedClassify}, search=${searchQuery})}"
+               class="page-item">»</a>
         </div>
+
+        <!-- Modal chi tiết sản phẩm -->
+        <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="productModalLabel">Chi tiết sản phẩm</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <img id="modalProductImage" src="" alt="Product Image" class="img-fluid">
+                            </div>
+                            <div class="col-md-6">
+                                <h3 id="modalProductName"></h3>
+                                <p><strong>Phân loại:</strong> <span id="modalProductClassify"></span></p>
+                                <p><strong>Giá:</strong> <span id="modalProductPrice"></span> VND</p>
+                                <p><strong>Mô tả:</strong> <span id="modalProductDescription"></span></p>
+                                <button class="btn btn-primary mt-3">Thêm vào giỏ hàng</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script th:inline="javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                const productItems = document.querySelectorAll('.product-item img');
+                
+                productItems.forEach(item => {
+                    item.addEventListener('click', function() {
+                        const productItem = this.closest('.product-item');
+                        const productId = this.getAttribute('data-product-id');
+                        
+                        // Lấy thông tin từ product-item
+                        const productImage = this.getAttribute('src');
+                        const productName = productItem.querySelector('h3').textContent;
+                        const productPrice = productItem.querySelector('p').textContent.replace(' VND', '');
+                        const productClassify = productItem.querySelector('.product-badge').textContent;
+                        const productDescription = this.getAttribute('data-product-description');
+                        
+                        // Điền thông tin vào modal
+                        document.getElementById('modalProductImage').src = productImage;
+                        document.getElementById('modalProductName').textContent = productName;
+                        document.getElementById('modalProductPrice').textContent = productPrice;
+                        document.getElementById('modalProductClassify').textContent = productClassify;
+                        document.getElementById('modalProductDescription').textContent = productDescription;
+                    });
+                });
+            });
+        </script>
+
+        
     </main>
 </body>
 </html>

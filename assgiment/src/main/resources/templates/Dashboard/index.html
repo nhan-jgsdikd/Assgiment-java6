@@ -3,14 +3,17 @@
     <body>
         <main class="content">
             <link rel="stylesheet" href="css/index.css">
-            <!-- Banner -->
-            <section class="banner">
-                <div class="banner-content">
-                    <h1>Khám phá vẻ đẹp tự nhiên</h1>
-                    <p>Ưu đãi lên đến 50% cho các sản phẩm mới nhất!</p>
-                    <button>Xem ngay</button>
+        <!-- Banner Slider -->
+        <section class="banner-slider">
+            <div class="slider-container">
+                <div class="slider-wrapper" th:each="banner, iter : ${bannerProducts}">
+                    <div class="slide" th:classappend="${iter.first} ? 'active' : ''">
+                        <!-- Sử dụng thuộc tính của Banner -->
+                        <img th:src="@{${banner.photo}}" th:alt="${banner.name}">
+                    </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
             <!-- Danh sách sản phẩm nổi bật -->
             <section class="featured-products">
@@ -25,6 +28,34 @@
                     </div>
                 </div>
             </section>
+
+
+
+
+            <script>
+                let slideIndex = 0;
+                const slides = document.querySelectorAll('.slide');
+                const dots = document.querySelectorAll('.slider-dots span');
+    
+                function showSlide(n) {
+                    slideIndex = n;
+                    if (n >= slides.length) slideIndex = 0;
+                    if (n < 0) slideIndex = slides.length - 1;
+                    
+                    slides.forEach(slide => slide.classList.remove('active'));
+                    dots.forEach(dot => dot.classList.remove('active'));
+                    
+                    slides[slideIndex].classList.add('active');
+                    dots[slideIndex].classList.add('active');
+                }
+    
+                function plusSlides(n) {
+                    showSlide(slideIndex + n);
+                }
+    
+                // Tự động chuyển slide mỗi 5 giây
+                setInterval(() => plusSlides(1), 5000);
+            </script>
         </main>
     </body>
 </html>

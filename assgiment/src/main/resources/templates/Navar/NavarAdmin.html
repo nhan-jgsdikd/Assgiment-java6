@@ -114,13 +114,6 @@
                     </a>
                 </li>
             </ul>
-
-            <!-- Search Form -->
-            <form class="search-box ms-lg-3 my-2 my-lg-0">
-                <input type="search" class="form-control" placeholder="Search...">
-                <button type="submit"><i class="fas fa-search text-muted"></i></button>
-            </form>
-
             <!-- Login/Logout Button -->
             <a class="btn logout-btn ms-3" th:if="${session.loggedInUser == null}" href="/login">Login</a>
             <a class="btn logout-btn ms-3" th:if="${session.loggedInUser != null}" href="/logout">Logout</a>
