@@ -26,9 +26,12 @@
                 <input type="hidden" name="search" th:value="${searchQuery}">
                 <select class="filter-select" name="classify" onchange="this.form.submit()">
                     <option value="" th:selected="${selectedClassify == ''}">Danh mục</option>
-                    <option value="perfume" th:selected="${selectedClassify == 'perfume'}">Chăm sóc da</option>
-                    <option value="lipstick" th:selected="${selectedClassify == 'lipstick'}">Trang điểm</option>
-                    <option value="foundation" th:selected="${selectedClassify == 'foundation'}">Chăm sóc tóc</option>
+                    <option value="lipstick" th:selected="${selectedClassify == 'Lipstick'}">Son môi</option>
+                    <option value="Sunscreen" th:selected="${selectedClassify == 'Sunscreen'}">Kem chống nắng</option>
+                    <option value="Skincare" th:selected="${selectedClassify == 'Skincare'}">Dướng da</option>
+                    <option value="Foundation" th:selected="${selectedClassify == 'Foundation'}">Phấn nền</option>
+                    <option value="Perfume" th:selected="${selectedClassify == 'Perfume'}">Nước hoa</option>
+                    <option value="Makeupremover" th:selected="${selectedClassify == 'Makeupremover'}">Tẩy trang</option>
                 </select>
             </form>
 

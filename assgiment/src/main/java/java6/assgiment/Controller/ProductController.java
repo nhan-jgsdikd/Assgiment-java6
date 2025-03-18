@@ -1,8 +1,9 @@
 package java6.assgiment.Controller;
 
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java6.assgiment.DAO.ProductDAO;
@@ -35,6 +37,7 @@ public class ProductController {
             @RequestParam(name = "search", required = false, defaultValue = "") String search,
             Model model) {
 
+        // Xác định cách sắp xếp dựa trên giá trị của "sort"
         Pageable pageable;
         switch (sort) {
             case "price-asc":
@@ -51,6 +54,7 @@ public class ProductController {
                 break;
         }
 
+        // Tìm kiếm và lọc sản phẩm
         Page<Product> productPage;
         if (!classify.isEmpty() && !search.isEmpty()) {
             productPage = productDAO.findByClassifyAndNameProductContainingIgnoreCase(classify, search, pageable);
@@ -62,6 +66,7 @@ public class ProductController {
             productPage = productDAO.findAll(pageable);
         }
 
+        // Thêm các thuộc tính vào model để sử dụng trong Thymeleaf
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", productPage.getTotalPages());
@@ -69,6 +74,7 @@ public class ProductController {
         model.addAttribute("selectedClassify", classify);
         model.addAttribute("searchQuery", search);
 
+        // Trả về tên view tương ứng với HTML
         return "Dashboard/Products";
     }
 
@@ -81,20 +87,23 @@ public class ProductController {
             @RequestParam(defaultValue = "") String search,
             HttpServletRequest request,
             RedirectAttributes redirectAttributes) {
-        
+
         HttpSession session = request.getSession();
-        
+
+        // Kiểm tra xem người dùng đã đăng nhập chưa
         if (session.getAttribute("loggedInUser") == null) {
             redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng");
             return "redirect:/login";
         }
 
+        // Tìm sản phẩm theo ID
         Optional<Product> productOptional = productDAO.findById(productId);
         if (!productOptional.isPresent()) {
             redirectAttributes.addFlashAttribute("error", "Sản phẩm không tồn tại");
-            return "redirect:/product"; // Changed to match GetMapping
+            return "redirect:/product";
         }
 
+        // Lấy hoặc khởi tạo giỏ hàng từ session
         @SuppressWarnings("unchecked")
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         if (cart == null) {
@@ -102,6 +111,7 @@ public class ProductController {
             session.setAttribute("cart", cart);
         }
 
+        // Thêm sản phẩm vào giỏ hàng
         Product product = productOptional.get();
         boolean productExists = false;
         for (CartItem item : cart) {
@@ -116,11 +126,13 @@ public class ProductController {
             cart.add(new CartItem(product, 1));
         }
 
+        // Thêm các tham số để giữ trạng thái trang sau khi redirect
         redirectAttributes.addAttribute("page", page);
         redirectAttributes.addAttribute("sort", sort);
         redirectAttributes.addAttribute("classify", classify);
         redirectAttributes.addAttribute("search", search);
-        
+
+        redirectAttributes.addFlashAttribute("message", "Đã thêm sản phẩm vào giỏ hàng!");
         return "redirect:/product";
     }
 }
