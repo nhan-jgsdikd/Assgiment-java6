@@ -1,185 +1,91 @@
-<style>
-    /* Custom Navbar Styles */
-    .navbar {
-        background: linear-gradient(135deg, #2c3e50, #3498db);
-        padding: 0.8rem 1rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        position: relative;
-        z-index: 1000;
-    }
-
-    .logo-container {
-        transition: transform 0.3s ease;
-    }
-
-    .logo-container:hover {
-        transform: scale(1.05);
-    }
-
-    .logo {
-        width: 120px;
-        height: auto;
-        border-radius: 8px;
-        transition: box-shadow 0.3s ease;
-    }
-
-    .navbar-nav {
-        gap: 1.5rem;
-    }
-
-    .nav-link {
-        color: rgba(255, 255, 255, 0.9) !important;
-        font-size: 1rem;
-        padding: 0.5rem 1rem !important;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        position: relative;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .nav-link:hover,
-    .nav-link.active {
-        color: #fff !important;
-        background: rgba(255, 255, 255, 0.15);
-        transform: translateY(-2px);
-    }
-
-    .nav-link::after {
-        content: '';
-        position: absolute;
-        bottom: -5px;
-        left: 50%;
-        width: 0;
-        height: 2px;
-        background: #fff;
-        transition: all 0.3s ease;
-    }
-
-    .nav-link:hover::after,
-    .nav-link.active::after {
-        width: 60%;
-        left: 20%;
-    }
-
-    .dropdown-menu {
-        border: none;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 10px;
-        margin-top: 0.5rem !important;
-    }
-
-    .dropdown-item {
-        padding: 0.7rem 1.2rem;
-        color: #2c3e50;
-        transition: all 0.3s ease;
-    }
-
-    .dropdown-item:hover {
-        background: #f8f9fa;
-        transform: translateX(5px);
-    }
-
-    .navbar-toggler {
-        border: none;
-        padding: 0.5rem;
-    }
-
-    .navbar-toggler:focus {
-        box-shadow: none;
-    }
-
-    .navbar-toggler-icon {
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-    }
-
-    .cart-icon {
-        position: relative;
-    }
-
-    .cart-badge {
-        position: absolute;
-        top: -8px;
-        right: -8px;
-        background: #e74c3c;
-        color: white;
-        font-size: 0.7rem;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    @media (max-width: 992px) {
-        .navbar-collapse {
-            background: rgba(44, 62, 80, 0.98);
-            padding: 1rem;
-            margin-top: 0.5rem;
-            border-radius: 10px;
-        }
-
-        .dropdown-menu {
-            background: rgba(255, 255, 255, 0.9);
-            margin-left: 1rem;
-        }
-    }
-</style>
-
-<nav class="navbar navbar-expand-lg fixed-top">
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom py-3">
     <div class="container">
+        <!-- Logo -->
         <a class="navbar-brand" href="/">
-            <div class="logo-container">
-                <img src="/img/logotrungthu.jpg" alt="Company Logo" class="logo">
-            </div>
+            <img src="https://graphicdesignjunction.com/wp-content/uploads/2018/04/colorful_logo_1.jpg" alt="Logo" class="logo" style="height: 40px;">
         </a>
-        
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div class="collapse navbar-collapse" id="navbarContent">
-            <ul class="navbar-nav ms-auto align-items-lg-center">
-                <li class="nav-item">
-                    <a class="nav-link active" href="/">
-                        <i class="fas fa-home"></i>
-                        <span>Home</span>
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a class="nav-link" href="/product">
-                        <i class="fas fa-box-open"></i>
-                        <span>Products</span>
-                    </a>
-                </li>
+        <!-- Search Bar -->
+        <div class="d-none d-lg-flex mx-4 w-50">
+            <form class="w-100">
+                <div class="input-group">
+                    <input type="text" class="form-control rounded-pill" placeholder="Type @-category you want to search for">
+                </div>
+            </form>
+        </div>
 
-                <li class="nav-item dropdown">
-                    <th:block th:if="${session.loggedInUser != null}">
-                        <th:block th:if="${session.loggedInUser.role == 'USER'}">
-                            <div th:replace="~{/Navar/Nav/UserNav}"></div>
-                        </th:block>
-                        <th:block th:if="${session.loggedInUser.role == 'ADMIN'}">
-                            <div th:replace="~{/Navar/Nav/AdminNav}"></div>
-                        </th:block>
-                    </th:block>
-                </li>
+        <!-- Right Section -->
+        <div class="d-flex align-items-center">
+            <!-- Nav Items -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item mx-2">
+                        <a class="nav-link text-dark" href="/">Home</a>
+                    </li>
+                        <a class="nav-link text-dark" href="/product" role="button">
+                            Products
+                        </a>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link text-dark" th:if="${session.loggedInUser == null}" href="/login">
+                            <i class="fas fa-user me-1"></i>Login
+                        </a>
+                        <div class="dropdown" th:if="${session.loggedInUser != null}">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-1"></i>
+                                <span th:text="${session.loggedInUser.username}"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <th:block th:if="${session.loggedInUser.role == 'USER'}">
+                                    <li><a class="dropdown-item" href="/profile"><i class="fas fa-user me-2"></i>Profile</a></li>
+                                    <li><a class="dropdown-item" href="/orders"><i class="fas fa-box me-2"></i>Orders</a></li>
+                                </th:block>
+                                <th:block th:if="${session.loggedInUser.role == 'ADMIN'}">
+                                    <li><a class="dropdown-item" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                                    <li><a class="dropdown-item" href="/admin/products"><i class="fas fa-boxes me-2"></i>Manage Products</a></li>
+                                </th:block>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link text-dark position-relative" href="/cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">3</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
-                <li class="nav-item">
-                    <a class="nav-link cart-icon" th:if="${session.loggedInUser != null}" href="/cart">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="d-lg-none">Cart</span>
-                        <span class="cart-badge">3</span>
-                    </a>
-                    <a class="nav-link" th:if="${session.loggedInUser == null}" href="/login">
-                        <i class="fas fa-sign-in-alt"></i>
-                        <span>Login</span>
-                    </a>
-                </li>
-            </ul>
+            <!-- Toggle Button -->
+            <button class="navbar-toggler border-0 ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
     </div>
 </nav>
+
+<style>
+    .logo {
+        transition: transform 0.3s ease;
+    }
+    .logo:hover {
+        transform: scale(1.05);
+    }
+    .nav-link {
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+    .nav-link:hover {
+        color: #007bff !important;
+    }
+    .dropdown-menu {
+        margin-top: 10px;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .badge {
+        font-size: 0.6em;
+        padding: 0.35em 0.5em;
+    }
+</style>
