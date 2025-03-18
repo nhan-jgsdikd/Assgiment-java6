@@ -1,216 +1,299 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Giỏ hàng của tôi</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        }
-
-        .cart-container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #fff;
-        }
-
-        .cart-header {
-            font-size: 24px;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
-        }
-
-        .seller-section {
-            margin-bottom: 30px;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 15px;
-        }
-
-        .seller-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .seller-name {
-            font-weight: 600;
-            color: #242424;
-        }
-
-        .product-item {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 15px;
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .product-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .product-image {
-            width: 80px;
-            height: 80px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .product-details {
-            flex: 1;
-        }
-
-        .product-title {
-            font-weight: 500;
-            margin-bottom: 5px;
-        }
-
-        .product-variant {
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        .price-column {
-            text-align: right;
-            color: #d70018;
-            font-weight: 600;
-        }
-
-        .quantity-input {
-            width: 60px;
-            padding: 5px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            text-align: center;
-        }
-
-        .promotion-section {
-            margin-top: 15px;
-            padding: 15px;
-            background: #fffaf8;
-            border-radius: 4px;
-        }
-
-        .checkout-summary {
-            margin-top: 30px;
-            padding: 20px;
-            background: #fafafa;
-            border-radius: 8px;
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
-            padding: 5px 0;
-        }
-
-        .total-row {
-            font-size: 1.2em;
-            font-weight: 600;
-            border-top: 1px solid #eee;
-            padding-top: 15px;
-        }
-
-        .checkout-button {
-            width: 100%;
-            padding: 15px;
-            background: #d70018;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 1.1em;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-    </style>
-</head>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{/Navar/Layout :: view(~{::main})}">
 <body>
-    <div class="cart-container">
-        <h1 class="cart-header">Giỏ hàng của tôi (2 sản phẩm)</h1>
+    <main class="content">
+        <style>
+            /* General styles */
+.content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
 
-        <!-- Seller 1 -->
-        <div class="seller-section">
-            <div class="seller-header">
-                <span class="seller-name">Tiki Trading</span>
-                <span>Còn 2 sản phẩm</span>
-            </div>
+/* Cart header */
+.cart-header {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
 
-            <div class="product-item">
-                <div class="product-info">
-                    <img src="path-to-image.jpg" class="product-image" alt="Samsung Galaxy Tab">
-                    <div class="product-details">
-                        <div class="product-title">Máy Tính Bảng Samsung Galaxy Tab A9 Wifi</div>
-                        <div class="product-variant">4GB/64GB - Hàng Chính Hãng - Xanh</div>
+/* Cart container */
+.cart-container {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+/* Seller section */
+.seller-section {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+}
+
+/* Product item */
+.product-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.product-info {
+    flex: 2;
+    display: flex;
+    align-items: center;
+}
+
+.product-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    margin-right: 15px;
+    border-radius: 4px;
+}
+
+.product-details {
+    flex: 1;
+}
+
+.product-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+.product-variant {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.price-column {
+    flex: 1;
+    text-align: center;
+    font-size: 16px;
+    color: #333;
+}
+
+.quantity-input {
+    width: 60px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.remove-btn {
+    flex: 0.5;
+    text-align: center;
+    color: #ff4444;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.remove-btn:hover {
+    text-decoration: underline;
+}
+
+/* Promotion section */
+.promotion-section {
+    padding: 15px 0;
+    color: #666;
+}
+
+/* Summary row */
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.total-row {
+    font-weight: bold;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+/* Checkout summary */
+.checkout-summary {
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.checkout-button {
+    width: 100%;
+    padding: 12px;
+    background: #d70018;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.checkout-button:hover {
+    background: #b80014;
+}
+
+/* Empty cart */
+.empty-cart h2 {
+    font-size: 24px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.btn {
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .product-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 0;
+    }
+
+    .product-info {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .price-column, .quantity-input, .remove-btn {
+        width: 100%;
+        text-align: left;
+        margin: 5px 0;
+    }
+
+    .quantity-input {
+        width: 80px;
+    }
+
+    .checkout-summary {
+        padding: 15px;
+    }
+}
+        </style>
+
+
+
+        <div class="cart-container" th:if="${not #lists.isEmpty(cartItems)}">
+            <h1 class="cart-header">Giỏ hàng của tôi</h1>
+
+            <!-- Danh sách người bán -->
+            <div class="seller-section" th:each="sellerEntry : ${sellerGroups}">
+                <!-- Danh sách sản phẩm -->
+                <div class="product-item" th:each="item : ${sellerEntry.value}">
+                    <div class="product-info">
+                        <img th:src="@{${item.product.photo}}" class="product-image" 
+                             th:alt="${item.product.nameProduct}">
+                        <div class="product-details">
+                            <div class="product-title" th:text="${item.product.nameProduct}"></div>
+                            <div class="product-variant" th:text="${item.product.classify}"></div>
+                        </div>
+                    </div>
+                    <div class="price-column">
+                        <span th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span>
+                    </div>
+                    <div>
+                        <input type="number" class="quantity-input" 
+                               th:value="${item.quantity}" min="1"
+                               th:data-id="${item.product.id}">
+                    </div>
+                    <div class="price-column">
+                        <span th:text="${#numbers.formatDecimal(item.quantity * item.product.price, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span>
+                    </div>
+                    <a th:href="@{/remove-from-cart(id=${item.product.id})}" class="remove-btn">Xóa</a>
+                </div>
+
+                <!-- Khuyến mãi (chưa có logic) -->
+                <div class="promotion-section" th:if="${not #lists.isEmpty(promotions)}">
+                    <div class="summary-row">
+                        <span>Tiki Khuyến Mãi</span>
+                        <span>Có thể chọn <span th:text="${promotions.size()}"></span></span>
                     </div>
                 </div>
-                <div class="price-column">2.490.000đ</div>
-                <div>
-                    <input type="number" class="quantity-input" value="1" min="1">
-                </div>
-                <div class="price-column">2.490.000đ</div>
             </div>
 
-            <div class="promotion-section">
+            <!-- Tổng thanh toán -->
+            <div class="checkout-summary">
                 <div class="summary-row">
-                    <span>Tiki Khuyến Mãi</span>
-                    <span>Có thể chọn 2</span>
+                    <span>Tổng tiền hàng</span>
+                    <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span>
+                </div>
+                <div class="summary-row">
+                    <span>Giảm giá trực tiếp</span>
+                    <span>-<span th:text="${#numbers.formatDecimal(totalDiscount, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span></span>
+                </div>
+                <div class="summary-row total-row">
+                    <span>Tổng thanh toán</span>
+                    <span style="color: #d70018" 
+                          th:text="${#numbers.formatDecimal(totalPayment, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span>
+                </div>
+                <form th:action="@{/checkout}" method="post">
+                    <button type="submit" class="checkout-button">Mua hàng (<span th:text="${totalItems}"></span>)</button>
+                </form>
+                <div style="text-align: right; margin-top: 10px; color: #666;">
+                    Tiết kiệm <span th:text="${#numbers.formatDecimal(totalDiscount, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span>
+                    (Đã bao gồm VAT nếu có)
                 </div>
             </div>
         </div>
 
-        <!-- Checkout Summary -->
-        <div class="checkout-summary">
-            <div class="summary-row">
-                <span>Tổng tiền hàng</span>
-                <span>3.890.000đ</span>
-            </div>
-            <div class="summary-row">
-                <span>Giảm giá trực tiếp</span>
-                <span>-1.500.000đ</span>
-            </div>
-            <div class="summary-row total-row">
-                <span>Tổng thanh toán</span>
-                <span style="color: #d70018">2.490.000đ</span>
-            </div>
-            <button class="checkout-button">Mua hàng (1)</button>
-            <div style="text-align: right; margin-top: 10px; color: #666;">
-                Tiết kiệm 1.500.000đ (Đã bao gồm VAT nếu có)
-            </div>
+        <!-- Giỏ hàng trống -->
+        <div class="empty-cart" th:if="${#lists.isEmpty(cartItems)}" style="text-align: center; padding: 50px;">
+            <h2>Giỏ hàng của bạn đang trống</h2>
+            <a th:href="@{/product}" class="btn btn-primary">Tiếp tục mua sắm</a>
         </div>
 
-        <!-- Seller 2 -->
-        <div class="seller-section">
-            <div class="seller-header">
-                <span class="seller-name">Mua S, giảm 3,2tr</span>
-            </div>
-
-            <div class="product-item">
-                <div class="product-info">
-                    <img src="path-to-image.jpg" class="product-image" alt="Oppo A98">
-                    <div class="product-details">
-                        <div class="product-title">Điện Thoại Oppo A98 8GB/256GB</div>
-                        <div class="product-variant">Hàng Chính Hãng - Xanh</div>
-                    </div>
-                </div>
-                <div class="price-column">4.090.000đ</div>
-                <div>
-                    <input type="number" class="quantity-input" value="1" min="1">
-                </div>
-                <div class="price-column">4.090.000đ</div>
-            </div>
-        </div>
-    </div>
+        <script th:inline="javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.quantity-input').forEach(input => {
+                    input.addEventListener('change', function() {
+                        const productId = this.dataset.id;
+                        const newQuantity = this.value;
+                        
+                        fetch('/update-cart', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({
+                                productId: productId,
+                                quantity: newQuantity
+                            })
+                        }).then(response => {
+                            if(response.ok) {
+                                location.reload();
+                            }
+                        });
+                    });
+                });
+            });
+        </script>
+    </main>
 </body>
 </html>

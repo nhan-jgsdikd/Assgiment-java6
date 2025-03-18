@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="~{/layouts/template :: view(~{::main})}">
+<body>
+  <main class="content">
+    <style>
+      .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 300px;
+        text-align: center;
+        background-color: #f8f9fa;
+        padding: 20px;
+      }
+      .content h1 {
+        font-size: 2.5rem;
+        color: #28a745;
+        margin-bottom: 20px;
+      }
+      .content p {
+        font-size: 1.25rem;
+        color: #333;
+        margin-bottom: 30px;
+      }
+      .content .btn-primary {
+        font-size: 1rem;
+        padding: 10px 20px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+      }
+      .content .btn-primary:hover {
+        background-color: #0056b3;
+      }
+    </style>
+    <h1>Thanh Toán Thành Công!</h1>
+    <p th:text="${message}"></p>
+    <a href="/products" class="btn btn-primary">Tiếp tục mua sắm</a>
+  </main>
+</body>
+</html>

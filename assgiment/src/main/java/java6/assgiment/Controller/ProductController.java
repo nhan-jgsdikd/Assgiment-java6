@@ -1,6 +1,8 @@
 package java6.assgiment.Controller;
 
-import org.hibernate.mapping.List;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,9 +11,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java6.assgiment.DAO.ProductDAO;
 import java6.assgiment.Entity.Product;
+import java6.assgiment.Stass.CartItem;
+
 @Controller
 public class ProductController {
 
@@ -27,45 +35,33 @@ public class ProductController {
             @RequestParam(name = "search", required = false, defaultValue = "") String search,
             Model model) {
 
-
-        // Xử lý sắp xếp
         Pageable pageable;
         switch (sort) {
             case "price-asc":
-                pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "price"));
+                pageable = PageRequest.of(page, size, Sort.by("price").ascending());
                 break;
             case "price-desc":
-                pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "price"));
+                pageable = PageRequest.of(page, size, Sort.by("price").descending());
                 break;
             case "newest":
-                pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+                pageable = PageRequest.of(page, size, Sort.by("id").descending());
                 break;
             default:
-                // Không sắp xếp, hiển thị tất cả sản phẩm theo thứ tự mặc định
                 pageable = PageRequest.of(page, size);
                 break;
-
-            
         }
 
-
-        // Xử lý lọc danh mục và tìm kiếm
         Page<Product> productPage;
         if (!classify.isEmpty() && !search.isEmpty()) {
-            // Lọc theo classify và tìm kiếm
             productPage = productDAO.findByClassifyAndNameProductContainingIgnoreCase(classify, search, pageable);
         } else if (!classify.isEmpty()) {
-            // Lọc theo classify
             productPage = productDAO.findByClassify(classify, pageable);
         } else if (!search.isEmpty()) {
-            // Tìm kiếm theo tên sản phẩm
             productPage = productDAO.findByNameProductContainingIgnoreCase(search, pageable);
         } else {
-            // Không lọc, không tìm kiếm
             productPage = productDAO.findAll(pageable);
         }
 
-        // Truyền dữ liệu vào model
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", productPage.getTotalPages());
@@ -73,6 +69,58 @@ public class ProductController {
         model.addAttribute("selectedClassify", classify);
         model.addAttribute("searchQuery", search);
 
-        return "Dashboard/Products"; 
+        return "Dashboard/Products";
+    }
+
+    @PostMapping("/add-to-cart")
+    public String addToCart(
+            @RequestParam("productId") Long productId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "default") String sort,
+            @RequestParam(defaultValue = "") String classify,
+            @RequestParam(defaultValue = "") String search,
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
+        
+        HttpSession session = request.getSession();
+        
+        if (session.getAttribute("loggedInUser") == null) {
+            redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng");
+            return "redirect:/login";
+        }
+
+        Optional<Product> productOptional = productDAO.findById(productId);
+        if (!productOptional.isPresent()) {
+            redirectAttributes.addFlashAttribute("error", "Sản phẩm không tồn tại");
+            return "redirect:/product"; // Changed to match GetMapping
+        }
+
+        @SuppressWarnings("unchecked")
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new ArrayList<>();
+            session.setAttribute("cart", cart);
+        }
+
+        Product product = productOptional.get();
+        boolean productExists = false;
+        for (CartItem item : cart) {
+            if (item.getProduct().getId().equals(productId)) {
+                item.setQuantity(item.getQuantity() + 1);
+                productExists = true;
+                break;
+            }
+        }
+
+        if (!productExists) {
+            cart.add(new CartItem(product, 1));
+        }
+
+        redirectAttributes.addAttribute("page", page);
+        redirectAttributes.addAttribute("sort", sort);
+        redirectAttributes.addAttribute("classify", classify);
+        redirectAttributes.addAttribute("search", search);
+        
+        return "redirect:/product";
     }
 }
