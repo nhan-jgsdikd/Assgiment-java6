@@ -39,7 +39,12 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
-        <!-- Spring Security -->
+       <!-- Chart.js -->
+            <dependency>
+                <groupId>org.webjars.npm</groupId>
+                <artifactId>chart.js</artifactId>
+                <version>3.7.1</version>
+            </dependency>
 
         <!-- Spring Data JPA -->
         <dependency>

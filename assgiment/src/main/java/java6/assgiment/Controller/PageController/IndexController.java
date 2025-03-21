@@ -1,4 +1,4 @@
-package java6.assgiment.Controller;
+package java6.assgiment.Controller.PageController;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package java6.assgiment.Controller;
+package java6.assgiment.Controller.PageController;
 
 import java.util.ArrayList;
 import java.util.List;
