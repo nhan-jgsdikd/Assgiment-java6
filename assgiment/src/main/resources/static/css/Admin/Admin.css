@@ -2,6 +2,7 @@
 
 :root {
 	--c-gray-900: #000000;
+<<<<<<< HEAD
 	--c-gray-800: #fcfcfc;
 	--c-gray-700: #2e2e2e;
 	--c-gray-600: #313131;
@@ -13,6 +14,19 @@
 
 	--c-green-500: #6296a3;
 	--c-olive-500: #aa6b37;
+=======
+	--c-gray-800: #1f1f1f;
+	--c-gray-700: #2e2e2e;
+	--c-gray-600: #313131;
+	--c-gray-500: #969593;
+	--c-gray-400: #a6a6a6;
+	--c-gray-300: #bdbbb7;
+	--c-gray-200: #f1f1f1;
+	--c-gray-100: #ffffff;
+
+	--c-green-500: #45ffbc;
+	--c-olive-500: #e3ffa8;
+>>>>>>> 944f0e9ca61eaa519166c89f51469dffa25d79e1
 
 	--c-white: var(--c-gray-100);
 
@@ -562,7 +576,11 @@ a {
 	aspect-ratio: 3 / 2;
 	flex-shrink: 0;
 	border-radius: 6px;
+<<<<<<< HEAD
 	color: var(--c-gray-100);
+=======
+	color: var(--c-gray-800);
+>>>>>>> 944f0e9ca61eaa519166c89f51469dffa25d79e1
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;

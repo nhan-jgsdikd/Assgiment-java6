@@ -20,6 +20,7 @@ public class AdminController {
 
     @GetMapping("/dashboard")
     public String showDashboard(Model model) {
+<<<<<<< HEAD
         User user = (User) session.getAttribute("loggedInUser");
         if (user == null) {
             return "redirect:/login";
@@ -133,6 +134,45 @@ public class AdminController {
 
 
 
+=======
+        // Lấy user từ session
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            // Nếu user null, chuyển hướng về trang đăng nhập
+            return "redirect:/login";
+        }
+        // Thêm user vào model để sử dụng trong template
+        model.addAttribute("user", user);
+        // Lấy danh sách users và thêm vào model
+        List<User> users = userDAO.findAll();
+        model.addAttribute("users", users);
+        return "Admin/Dashboard";
+    }
+
+    @GetMapping("/Staff")
+    public String Staff() {
+        return "Admin/Staff"; // Đảm bảo tên này khớp với file trong thư mục templates
+    }
+    
+
+    @GetMapping("/Products")
+    public String Products() {
+        return "Admin/Products";
+    }
+
+    @GetMapping("/Oder")
+    public String Oder() {
+        return "Admin/Oder";
+    }
+
+    @GetMapping("/Collaborate")
+    public String Collaborate() {
+        return "Admin/Collaborate";
+    }
+
+    @GetMapping("/Feedback")
+    public String Feedback() {
+>>>>>>> 944f0e9ca61eaa519166c89f51469dffa25d79e1
         return "Admin/Feedback";
     }
 
