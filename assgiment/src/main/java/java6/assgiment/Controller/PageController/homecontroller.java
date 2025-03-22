@@ -1,4 +1,4 @@
-package java6.assgiment.Controller;
+package java6.assgiment.Controller.PageController;
 
 import org.springframework.stereotype.Controller;
 

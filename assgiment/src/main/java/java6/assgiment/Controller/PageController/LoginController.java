@@ -1,4 +1,4 @@
-package java6.assgiment.Controller;
+package java6.assgiment.Controller.PageController;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class LoginController {
         session.setAttribute("loggedInUser", user);
 
         if ("ADMIN".equals(user.getRole())) {
-            return "redirect:/";
+            return "redirect:/dashboard";
         } else {
             return "redirect:/";
         }
