@@ -20,121 +20,6 @@ public class AdminController {
 
     @GetMapping("/dashboard")
     public String showDashboard(Model model) {
-<<<<<<< HEAD
-        User user = (User) session.getAttribute("loggedInUser");
-        if (user == null) {
-            return "redirect:/login";
-        }
-        model.addAttribute("user", user);
-        List<User> users = userDAO.findAll();
-        model.addAttribute("users", users);
-
-
-
-
-
-
-        return "Admin/Dashboard";
-    }
-
-
-
-    
-    @GetMapping("/Staff")
-    public String Staff(Model model) {
-        User user = (User) session.getAttribute("loggedInUser");
-        if (user == null) {
-            return "redirect:/login";
-        }
-        model.addAttribute("user", user);
-        List<User> users = userDAO.findAll();
-        model.addAttribute("users", users);
-
-
-
-        
-        return "Admin/Staff";
-    }
-    
-
-
-
-    @GetMapping("/Products")
-    public String Products(Model model) {
-        User user = (User) session.getAttribute("loggedInUser");
-        if (user == null) {
-            return "redirect:/login";
-        }
-        model.addAttribute("user", user);
-        List<User> users = userDAO.findAll();
-        model.addAttribute("users", users);
-
-
-
-
-        return "Admin/Products";
-    }
-
-
-
-
-    @GetMapping("/Oder")
-    public String Oder(Model model) {
-        User user = (User) session.getAttribute("loggedInUser");
-        if (user == null) {
-            return "redirect:/login";
-        }
-        model.addAttribute("user", user);
-        List<User> users = userDAO.findAll();
-        model.addAttribute("users", users);
-
-
-
-
-
-        return "Admin/Oder";
-    }
-
-
-
-
-    @GetMapping("/Collaborate")
-    public String Collaborate(Model model) {
-        User user = (User) session.getAttribute("loggedInUser");
-        if (user == null) {
-            return "redirect:/login";
-        }
-        model.addAttribute("user", user);
-        List<User> users = userDAO.findAll();
-        model.addAttribute("users", users);
-
-
-
-
-
-
-        return "Admin/Collaborate";
-    }
-
-
-
-
-    @GetMapping("/Feedback")
-    public String Feedback(Model model) {
-        User user = (User) session.getAttribute("loggedInUser");
-        if (user == null) {
-            return "redirect:/login";
-        }
-        model.addAttribute("user", user);
-        List<User> users = userDAO.findAll();
-        model.addAttribute("users", users);
-
-
-
-
-
-
-=======
         // Lấy user từ session
         User user = (User) session.getAttribute("loggedInUser");
         if (user == null) {
@@ -151,7 +36,7 @@ public class AdminController {
 
     @GetMapping("/Staff")
     public String Staff() {
-        return "Admin/Staff"; // Đảm bảo tên này khớp với file trong thư mục templates
+        return "Admin/Staff"; 
     }
     
 
@@ -172,7 +57,6 @@ public class AdminController {
 
     @GetMapping("/Feedback")
     public String Feedback() {
->>>>>>> 944f0e9ca61eaa519166c89f51469dffa25d79e1
         return "Admin/Feedback";
     }
 
