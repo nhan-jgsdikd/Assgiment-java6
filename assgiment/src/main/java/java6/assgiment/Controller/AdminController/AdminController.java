@@ -32,9 +32,7 @@ public class AdminController {
     @GetMapping("/dashboard")
     public String showDashboard(Model model) {
         User user = (User) session.getAttribute("loggedInUser");
-        if (user == null) {
-            return "redirect:/login";
-        }
+
         model.addAttribute("user", user);
         List<User> users = userDAO.findAll();
         model.addAttribute("users", users);
@@ -42,6 +40,13 @@ public class AdminController {
 
         return "Admin/Dashboard";
     }
+
+
+    @GetMapping("/Staff")
+    public String Staff() {
+        return "Admin/Staff"; 
+    }
+    
 
     @GetMapping("/Products")
     public String product(

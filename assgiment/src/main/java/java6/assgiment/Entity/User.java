@@ -16,7 +16,7 @@
         @Column(columnDefinition = "VARCHAR(255)")
         private String username;
 
-        @Column(columnDefinition = "VARCHAR(255)")
+        @Column(nullable = false, length = 60)
         private String password;
 
         @Column(columnDefinition = "VARCHAR(255)")
