@@ -37,7 +37,6 @@ public class ProductController {
             @RequestParam(name = "search", required = false, defaultValue = "") String search,
             Model model) {
 
-        // Xác định cách sắp xếp dựa trên giá trị của "sort"
         Pageable pageable;
         switch (sort) {
             case "price-asc":
@@ -54,7 +53,6 @@ public class ProductController {
                 break;
         }
 
-        // Tìm kiếm và lọc sản phẩm
         Page<Product> productPage;
         if (!classify.isEmpty() && !search.isEmpty()) {
             productPage = productDAO.findByClassifyAndNameProductContainingIgnoreCase(classify, search, pageable);

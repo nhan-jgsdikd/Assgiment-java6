@@ -2,18 +2,18 @@
 
 :root {
 	--c-gray-900: #000000;
-	--c-gray-800: #1f1f1f;
+	--c-gray-800: #fcfcfc;
 	--c-gray-700: #2e2e2e;
 	--c-gray-600: #313131;
-	--c-gray-500: #969593;
-	--c-gray-400: #a6a6a6;
+	--c-gray-500: #202020;
+	--c-gray-400: #141414;
 	--c-gray-300: #bdbbb7;
-	--c-gray-200: #f1f1f1;
-	--c-gray-100: #ffffff;
+	--c-gray-200: #b8b8b8;
+	--c-gray-100: #000000;
 
-	--c-green-500: #45ffbc;
-	--c-olive-500: #e3ffa8;
-
+	--c-green-500: #66f8ec;
+	--c-olive-500: #f1ff32;
+	--c-DIA-500: #e216e9;
 	--c-white: var(--c-gray-100);
 
 	--c-text-primary: var(--c-gray-100);
@@ -89,15 +89,55 @@ a {
 }
 
 .app-header-navigation {
-	@media (max-width: 1200px) {
+	@media (max-width: 1300px) {
 		display: none;
 	}
+}
+
+.app-header-navigation {
+    width: 600px; 
+}
+.tabs {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.tabs a {
+    text-decoration: none; 
+    color: #333333; 
+    font-size: 1rem;
+    font-weight: 500; 
+    padding: 0.5rem 1rem; 
+    border-radius: 4px; 
+    transition: all 0.3s ease;
+}
+
+.tabs a:hover {
+    background-color: #f0f0f0;
+    color: #007bff; 
+}
+
+.tabs a.active {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    .tabs {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .tabs a {
+        width: 100%;
+        text-align: center;
+    }
 }
 
 .app-header-actions {
 	display: flex;
 	align-items: center;
-	@media (max-width: 1200px) {
+	@media (max-width: 1200px ) {
 		display: none;
 	}
 }
@@ -111,6 +151,9 @@ a {
 	& > * + * {
 		margin-left: 1rem;
 	}
+}
+.fortity{
+	width: 250px;
 }
 
 .app-header-mobile {
@@ -140,17 +183,139 @@ a {
 }
 
 .app-body-navigation {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	@media (max-width: 1200px) {
-		display: none;
-	}
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    width: 250px;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .app-body-sidebar {
+    padding: 2rem;
+    background-color: #f0f0f0;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    width: 95%;
+	height: 700px;
+	overflow-y: auto; 
+    overflow-x: hidden; 
+    max-width: 1200px; 
+    margin: 2rem auto;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
+.payment-section h2 {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    color: #333;
+    margin-bottom: 1.5rem;
+    width: 100%; 
+}
+
+.payment {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    flex: 1 1 calc(33.333% - 2rem);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card {
+    padding: 0.75rem;
+    border-radius: 5px;
+    color: #fff;
+    margin-bottom: 0.75rem;
+    font-size: clamp(1rem, 3vw, 1.25rem);
+}
+
+
+.payment-details h3 {
+    font-size: clamp(1.25rem, 4vw, 1.5rem);
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+.payment-details div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.payment-details span {
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    color: #222;
+}
+
+@media (max-width: 768px) {
+    .payment {
+        flex: 1 1 calc(50% - 1rem); 
+    }
+}
+
+@media (max-width: 500px) {
+    .payment {
+        flex: 1 1 100%; 
+    }
+
+    .payment-details div {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .icon-button {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+}
+
+.card {
+    padding: 10px;
+    border-radius: 5px;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+
+.payment-details h3 {
+    font-size: 18px;
+    color: #555;
+}
+
+.payment-details div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.payment-details span {
+    font-size: 16px;
+    color: #222;
+}
+
+.icon-button {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.icon-button:hover {
+    background-color: #0056b3;
+}
+.app-body-main-content{
+	width: 600px;
+}
 .footer {
 	margin-top: auto;
 	h1 {
@@ -206,37 +371,31 @@ a {
 }
 
 .navigation {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	color: var(--c-text-tertiary);
-	a {
-		display: flex;
-		align-items: center;
-		text-decoration: none;
-		transition: 0.25s ease;
-
-		* {
-			transition: 0.25s ease;
-		}
-
-		i {
-			margin-right: 0.75rem;
-			font-size: 1.25em;
-			flex-shrink: 0;
-		}
-
-		& + a {
-			margin-top: 1.25rem;
-		}
-
-		&:hover,
-		&:focus {
-			transform: translateX(4px);
-			color: var(--c-text-primary);
-		}
-	}
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex-grow: 1;
 }
+
+.navigation a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #ecf0f1;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.navigation a:hover {
+    background-color: #34495e;
+}
+
+.navigation a i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
 
 .tabs {
 	display: flex;
@@ -436,11 +595,34 @@ a {
 
 .service-section {
 	& > h2 {
-		font-size: 1.5rem;
-		margin-bottom: 1.25rem;
+		border: 2px solid #ccc; /* Tạo khung với màu xám nhạt */
+		border-radius: 10px; /* Bo góc khung */
+		padding: 10px; 
+		margin-bottom: 20px;
+		background-color: #f9f9f9;
+		background-color: #e3f2fd;
 	}
 }
 
+.tiles {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; 
+}
+
+.tile {
+     flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 8px; 
+    padding: 10px;
+    background-color: #a5d1eee5;
+    transition: transform 0.2s;
+    margin-right: 0px;
+}
+
+.tile:hover {
+    transform: translateY(-5px);
+}
 .service-section-header {
 	display: flex;
 	align-items: center;
@@ -520,15 +702,13 @@ a {
 	}
 }
 
-.mobile-only {
-	display: none;
-	@media (max-width: 1000px) {
-		display: inline-flex;
-	}
-}
 
 .transfer-section {
-	margin-top: 2.5rem;
+	border: 2px solid #ccc; 
+    border-radius: 10px; 
+    margin-bottom: 20px;
+    background-color: #c5f78c; 
+	background-color: #5b9fd6;
 }
 
 .transfer-section-header {
@@ -540,6 +720,7 @@ a {
 	h2 {
 		font-size: 1.5rem;
 	}
+	margin-top: 40px
 }
 
 .payments {
@@ -562,7 +743,7 @@ a {
 	aspect-ratio: 3 / 2;
 	flex-shrink: 0;
 	border-radius: 6px;
-	color: var(--c-gray-800);
+	color: var(--c-gray-100);
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
@@ -634,23 +815,19 @@ a {
 }
 
 .transfers {
-	display: flex;
-	flex-direction: column;
-	margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; 
+	padding: 10px;
 }
 
 .transfer {
-	display: flex;
-	align-items: center;
-	width: 100%;
-	font-size: 0.875rem;
-	@media (max-width: 1000px) {
-		align-items: flex-start;
-		flex-direction: column;
-	}
-	& + * {
-		margin-top: 2rem;
-	}
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd; /* Khung nhẹ cho mỗi transfer */
+    border-radius: 8px; /* Bo góc */
+    padding: 15px;
+    background-color: #ffffff; /* Màu nền trắng */
 }
 
 .transfer-logo {

@@ -1,5 +1,6 @@
 package java6.assgiment.Controller.PageController;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,18 +28,27 @@ public class IndexController {
     ProductDAO productDAO;
 
     @Autowired
-    BannerDAO bannerDAO; // Đổi tên biến cho đúng quy tắc
+    BannerDAO bannerDAO;
 
     @GetMapping("/")
     public String home(Model model) {
-        // Lấy tất cả banner
+
         List<Banner> bannerProducts = bannerDAO.findAll(); 
         model.addAttribute("bannerProducts", bannerProducts);
         
-        // Lấy 5 sản phẩm nổi bật
         List<Product> products = productDAO.findAll();
-        List<Product> limitedProducts = products.stream().limit(5).collect(Collectors.toList());
+        List<Product> limitedProducts = products.stream().limit(8).collect(Collectors.toList());
         model.addAttribute("indexstaff", limitedProducts);
+
+        List<Long> productIds = Arrays.asList(1L, 9L, 14L, 15L, 30L, 35L, 46L, 50L);
+        List<Product> specificProducts = productDAO.findAllById(productIds);
+        model.addAttribute("specificProducts", specificProducts);
+
+        List<Long> productIDS = Arrays.asList(11L, 12L, 13L, 14L, 15L, 26L, 27L, 28L, 29L, 30L);
+        List<Product> perfumeproducts = productDAO.findAllById(productIDS);
+        model.addAttribute("perfumeproducts", perfumeproducts);
+
+
         
         return "Dashboard/index"; 
     }
