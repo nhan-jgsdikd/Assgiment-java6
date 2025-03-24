@@ -36,62 +36,12 @@ public class AdminController {
         model.addAttribute("user", user);
         List<User> users = userDAO.findAll();
         model.addAttribute("users", users);
-
-
         return "Admin/Dashboard";
     }
 
-
-    @GetMapping("/Staff")
-    public String Staff() {
-        return "Admin/Staff"; 
-    }
     
 
-    @GetMapping("/Products")
-    public String product(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "12") int size,
-            @RequestParam(name = "sort", required = false, defaultValue = "default") String sort,
-            @RequestParam(name = "classify", required = false, defaultValue = "") String classify,
-            @RequestParam(name = "search", required = false, defaultValue = "") String search,
-            Model model) {
 
-        Pageable pageable;
-        switch (sort) {
-            case "price-asc":
-                pageable = PageRequest.of(page, size, Sort.by("price").ascending());
-                break;
-            case "price-desc":
-                pageable = PageRequest.of(page, size, Sort.by("price").descending());
-                break;
-            case "newest":
-                pageable = PageRequest.of(page, size, Sort.by("id").descending());
-                break;
-            default:
-                pageable = PageRequest.of(page, size);
-                break;
-        }
-
-        Page<Product> productPage;
-        if (!classify.isEmpty() && !search.isEmpty()) {
-            productPage = productDAO.findByClassifyAndNameProductContainingIgnoreCase(classify, search, pageable);
-        } else if (!classify.isEmpty()) {
-            productPage = productDAO.findByClassify(classify, pageable);
-        } else if (!search.isEmpty()) {
-            productPage = productDAO.findByNameProductContainingIgnoreCase(search, pageable);
-        } else {
-            productPage = productDAO.findAll(pageable);
-        }
-
-        model.addAttribute("products", productPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", productPage.getTotalPages());
-        model.addAttribute("selectedSort", sort);
-        model.addAttribute("selectedClassify", classify);
-        model.addAttribute("searchQuery", search);
-        return "Admin/Products";
-    }
 
 
     @GetMapping("/Oder")

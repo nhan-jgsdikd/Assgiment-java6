@@ -1,12 +1,11 @@
-<!-- src/main/resources/templates/Admin/Layout.html -->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Admin Dashboard - Quản Lý Sản Phẩm</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/Admin/Products.css}">
+    <link rel="stylesheet" th:href="@{/css/Admin/Staff.css}">
     <script src="https://unpkg.com/phosphor-icons"></script>
 </head>
 <body>
@@ -15,8 +14,8 @@
             <div class="app-header-logo">
                 <div class="logo">
                     <div class="fortity">
-                        <h2 th:text="${user != null ? user.username : 'Tên người dùng'}">Tên người dùng</h2>
-                        <p class="pap"><span th:text="${user != null ? user.email : ''}"></span></p>
+                        <h2>Admin</h2>
+                        <p class="pap"><span>admin@example.com</span></p>
                     </div>
                 </div>
             </div>
@@ -25,7 +24,7 @@
                     <a href="#">Tổng Quát</a>
                     <a href="#">Nhân Viên</a>
                     <a href="#">Về Chúng Ta</a>
-                    <a href="#">Tài Khoảng</a>
+                    <a href="#">Tài Khoản</a>
                 </div>
             </div>
             <div class="app-header-actions">
@@ -38,7 +37,10 @@
                 <button class="icon-button large"><i class="ph-list"></i></button>
             </div>
         </header>
+
+        <!-- Main Body -->
         <div class="app-body">
+            <!-- Sidebar Navigation -->
             <div class="app-body-navigation">
                 <nav class="navigation">
                     <a href="/dashboard"><i class="ph-browsers"></i><span>Trang Chủ</span></a>
@@ -53,117 +55,66 @@
                     <div>Almeria ©<br />All Rights Reserved 2021</div>
                 </footer>
             </div>
+
+            <!-- Main Content -->
+            <div class="app-body-content">
+                <div class="container">
+                    <h1 class="text-center">Danh Sách Sản Phẩm</h1>
+
+                    <div class="text-right mb-4">
+                        <a th:href="@{/edit-product}" class="btn-primary">
+                            <i class="ph-plus"></i> Thêm sản phẩm
+                        </a>
+                    </div>
+
+                    <!-- Bảng Danh Sách Sản Phẩm -->
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Mô tả</th>
+                                    <th>Ảnh</th>
+                                    <th>Giá</th>
+                                    <th>Phân loại</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="product : ${products}">
+                                    <td th:text="${product.id}"></td>
+                                    <td th:text="${product.nameProduct}"></td>
+                                    <td th:text="${product.description}"></td>
+                                    <td>
+                                        <img th:if="${product.photo != null and product.photo != '/images/default-product.jpg'}" 
+                                             th:src="@{${product.photo}}" 
+                                             alt="Product Photo" 
+                                             class="w-10 h-10 object-cover">
+                                        <img th:unless="${product.photo != null and product.photo != '/images/default-product.jpg'}" 
+                                             th:src="@{/images/default-product.jpg}" 
+                                             alt="Default Product" 
+                                             class="w-10 h-10 object-cover">
+                                    </td>
+                                    <td th:text="${product.price}"></td>
+                                    <td th:text="${product.classify}"></td>
+                                    <td class="text-center space-x-2">
+                                        <a th:href="@{/edit-product/{id}(id=${product.id})}" class="btn-warning">
+                                            <i class="ph-pencil-simple"></i> Sửa
+                                        </a>
+                                        <form th:action="@{/delete-product/{id}(id=${product.id})}" method="post" style="display: inline;">
+                                            <button type="submit" class="btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xoá sản phẩm này?');">
+                                                <i class="ph-trash"></i> Xoá
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-            <div class="filter-controls">
-                <form id="sortForm" method="get" th:action="@{/product}">
-                    <input type="hidden" name="classify" th:value="${selectedClassify}">
-                    <input type="hidden" name="search" th:value="${searchQuery}">
-                    <select class="filter-select" name="sort" onchange="this.form.submit()">
-                        <option value="default" th:selected="${selectedSort == 'default'}">Sản phẩm</option>
-                        <option value="price-asc" th:selected="${selectedSort == 'price-asc'}">Giá tăng dần</option>
-                        <option value="price-desc" th:selected="${selectedSort == 'price-desc'}">Giá giảm dần</option>
-                        <option value="newest" th:selected="${selectedSort == 'newest'}">Mới nhất</option>
-                    </select>
-                </form>
-    
-                <form id="classifyForm" method="get" th:action="@{/product}">
-                    <input type="hidden" name="sort" th:value="${selectedSort}">
-                    <input type="hidden" name="search" th:value="${searchQuery}">
-                    <select class="filter-select" name="classify" onchange="this.form.submit()">
-                        <option value="" th:selected="${selectedClassify == ''}">Danh mục</option>
-                        <option value="lipstick" th:selected="${selectedClassify == 'Lipstick'}">Son môi</option>
-                        <option value="Sunscreen" th:selected="${selectedClassify == 'Sunscreen'}">Kem chống nắng</option>
-                        <option value="Skincare" th:selected="${selectedClassify == 'Skincare'}">Dướng da</option>
-                        <option value="Foundation" th:selected="${selectedClassify == 'Foundation'}">Phấn nền</option>
-                        <option value="Perfume" th:selected="${selectedClassify == 'Perfume'}">Nước hoa</option>
-                        <option value="Makeupremover" th:selected="${selectedClassify == 'Makeupremover'}">Tẩy trang</option>
-                    </select>
-                </form>
-    
-                <form id="searchForm" method="get" th:action="@{/product}">
-                    <input type="hidden" name="sort" th:value="${selectedSort}">
-                    <input type="hidden" name="classify" th:value="${selectedClassify}">
-                    <input type="text" class="search-box" name="search" 
-                           placeholder="Tìm kiếm sản phẩm..." th:value="${searchQuery}">
-                    <button type="submit">Tìm kiếm</button>
-                </form>
-            </div>
-    
-            <!-- Product List -->
-            <section class="featured-products">
-                <div class="product-list">
-                    <div class="product-item" th:each="product : ${products}">
-                        <span class="product-badge" th:text="${product.classify}"></span>
-                        <img th:src="@{${product.photo}}" 
-                             th:alt="${product.nameProduct}"
-                             data-bs-toggle="modal"
-                             data-bs-target="#productModal"
-                             th:attr="data-product-id=${product.id}, 
-                                      data-product-description=${product.description}">
-                        <h3 th:text="${product.nameProduct}"></h3>
-                        <p th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')} + ' VND'"></p>
-                        
-                        <form method="post" th:action="@{/add-to-cart}">
-                            <input type="hidden" name="productId" th:value="${product.id}">
-                            <input type="hidden" name="page" th:value="${currentPage}">
-                            <input type="hidden" name="sort" th:value="${selectedSort}">
-                            <input type="hidden" name="classify" th:value="${selectedClassify}">
-                            <input type="hidden" name="search" th:value="${searchQuery}">
-                            <button type="submit" class="add-to-cart-btn">Thêm vào giỏ</button>
-                        </form>
-                    </div>
-                </div>
-            </section>
-    
-            <!-- Pagination -->
-            <div class="pagination">
-                <a th:if="${currentPage > 0}" 
-                   th:href="@{/product(page=${currentPage - 1}, size=12, sort=${selectedSort}, classify=${selectedClassify}, search=${searchQuery})}"
-                   class="page-item">«</a>
-                <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-                   th:href="@{/product(page=${i}, size=12, sort=${selectedSort}, classify=${selectedClassify}, search=${searchQuery})}"
-                   th:classappend="${i == currentPage} ? 'active'" 
-                   th:text="${i + 1}"></a>
-                <a th:if="${currentPage < totalPages - 1}"
-                   th:href="@{/product(page=${currentPage + 1}, size=12, sort=${selectedSort}, classify=${selectedClassify}, search=${searchQuery})}"
-                   class="page-item">»</a>
-            </div>
-    
-            <!-- Product Modal -->
-            <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="productModalLabel">Chi tiết sản phẩm</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <img id="modalProductImage" src="" alt="Product Image" class="img-fluid">
-                                </div>
-                                <div class="col-md-6">
-                                    <h3 id="modalProductName"></h3>
-                                    <p><strong>Phân loại:</strong> <span id="modalProductClassify"></span></p>
-                                    <p><strong>Giá:</strong> <span id="modalProductPrice"></span> VND</p>
-                                    <p><strong>Mô tả:</strong> <span id="modalProductDescription"></span></p>
-                                    <form method="post" th:action="@{/add-to-cart}">
-                                        <input type="hidden" name="productId" id="modalProductId">
-                                        <input type="hidden" name="page" th:value="${currentPage}">
-                                        <input type="hidden" name="sort" th:value="${selectedSort}">
-                                        <input type="hidden" name="classify" th:value="${selectedClassify}">
-                                        <input type="hidden" name="search" th:value="${searchQuery}">
-                                        <button type="submit" class="btn btn-primary mt-3">Thêm vào giỏ hàng</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
     </div>
 </body>
 </html>

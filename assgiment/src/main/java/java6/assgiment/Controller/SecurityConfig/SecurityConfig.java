@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
 import java.util.List;
 
 @Configuration
@@ -40,11 +41,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/signup/**", "/", "/product", "/css/**", "","/js/**").permitAll()
-                .requestMatchers( "/Staff", "/Products", "/Order", "/Collaborate", "/Feedback").hasRole("ADMIN")
+                .requestMatchers("/login", "/signup/**", "/", "/product", "/css/**", "/js/**").permitAll()
+                .requestMatchers("/dashboard/**", "/Staff/**", "/Products/**", "/Order/**", "/Collaborate/**", "/Feedback/**").hasRole("ADMIN") // Sử dụng hasRole thay vì hasAuthority
                 .anyRequest().authenticated()
             )
-            .csrf(AbstractHttpConfigurer::disable);
+            .csrf(AbstractHttpConfigurer::disable); // Tắt CSRF để test dễ hơn
 
         return http.build();
     }

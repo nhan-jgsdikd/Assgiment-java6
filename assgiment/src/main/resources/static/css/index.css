@@ -263,11 +263,13 @@
     padding: 16px;
     position: relative;
     margin-left: 25px;
+    margin-top: -75px;
 }
 
 .brand-card h3 {
     margin: 0;
     font-size: 1rem;
+    font-weight: bold;
     color: #333;
     text-align: center;
 }
