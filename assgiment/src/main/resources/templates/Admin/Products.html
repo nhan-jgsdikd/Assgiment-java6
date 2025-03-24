@@ -1,23 +1,21 @@
-<!-- src/main/resources/templates/Admin/Layout.html -->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Admin Dashboard - Quản Lý Sản Phẩm</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/Admin/Admin.css}">
+    <link rel="stylesheet" th:href="@{/css/Admin/Staff.css}">
     <script src="https://unpkg.com/phosphor-icons"></script>
 </head>
 <body>
     <div class="app">
-        <!-- Header -->
         <header class="app-header">
             <div class="app-header-logo">
                 <div class="logo">
                     <div class="fortity">
-                        <h2 th:text="${user != null ? user.username : 'Tên người dùng'}">Tên người dùng</h2>
-                        <p class="pap"><span th:text="${user != null ? user.email : ''}"></span></p>
+                        <h2>Admin</h2>
+                        <p class="pap"><span>admin@example.com</span></p>
                     </div>
                 </div>
             </div>
@@ -26,9 +24,7 @@
                     <a href="#">Tổng Quát</a>
                     <a href="#">Nhân Viên</a>
                     <a href="#">Về Chúng Ta</a>
-                    <a href="#">Tài Khoảng</a>
-                    <a href="#">Hệ Thống</a>
-                    <a href="#">Dự án</a>
+                    <a href="#">Tài Khoản</a>
                 </div>
             </div>
             <div class="app-header-actions">
@@ -61,103 +57,62 @@
             </div>
 
             <!-- Main Content -->
-            <div class="app-body-main-content">
-                <section class="service-section">
-                    <h2>Biến động Doanh Thu</h2>
-                    <div class="tiles">
-                        <article class="tile">
-                            <div class="tile-header">
-                                <i class="ph-lightning-light"></i>
-                                <h3><span>Báo Cáo Tài Chính</span><span>Báo cáo trong 2 tháng gần đây.</span></h3>
-                            </div>
-                            <a href="#"><span></span><span class="icon-button"><i class="ph-caret-right-bold"></i></span></a>
-                        </article>
-                        <article class="tile">
-                            <div class="tile-header">
-                                <i class="ph-fire-simple-light"></i>
-                                <h3><span>Sự Kiện</span><span>Các Sự kiện sắp Tổ Chức.</span></h3>
-                            </div>
-                            <a href="#"><span></span><span class="icon-button"><i class="ph-caret-right-bold"></i></span></a>
-                        </article>
-                        <article class="tile">
-                            <div class="tile-header">
-                                <i class="ph-file-light"></i>
-                                <h3><span>Thống Kê Số Liệu</span><span>Các Phần Được Liệt Kê Trong Danh Sách.</span></h3>
-                            </div>
-                            <a href="#"><span></span><span class="icon-button"><i class="ph-caret-right-bold"></i></span></a>
-                        </article>
-                    </div>
-                    <div class="service-section-footer">
-                        <p>Lại Một Hành Trình Gian Khổ Của Học Lạc Lối Trong Biển Tri Thức.</p>
-                    </div>
-                </section>
+            <div class="app-body-content">
+                <div class="container">
+                    <h1 class="text-center">Danh Sách Sản Phẩm</h1>
 
-                <section class="transfer-section">
-                    <div class="transfer-section-header">
-                        <h2>Các Sự Kiện Đã Qua</h2>
+                    <div class="text-right mb-4">
+                        <a th:href="@{/edit-product}" class="btn-primary">
+                            <i class="ph-plus"></i> Thêm sản phẩm
+                        </a>
                     </div>
-                    <div class="transfers">
-                        <div class="transfer">
-                            <div class="transfer-logo"><img src="https://brandeps.com/logo-download/W/Web-Assembly-logo-vector-01.svg" alt="Apple Logo" /></div>
-                            <dl class="transfer-details">
-                                <div><dt>NHÂN DANH THẾ GIỚI.</dt></div>
-                                <div><dt>177013</dt><dd>Số lượng ước tính</dd></div>
-                                <div><dt>28 Oct. 21</dt><dd>ngày diễn ra</dd></div>
-                                <div><dt>-177013</dt><dd>Tổng Chi Phí</dd></div>
-                            </dl>
-                        </div>
-                        <div class="transfer">
-                            <div class="transfer-logo"><img src="https://brandeps.com/logo-download/C/CSS-logo-vector-01.svg" alt="Pinterest Logo" /></div>
-                            <dl class="transfer-details">
-                                <div><dt>BIỂN LỤC ĐỊA CHÌM</dt></div>
-                                <div><dt>177013</dt><dd>Số lượng ước tính</dd></div>
-                                <div><dt>28 Oct. 21</dt><dd>ngày diễn ra</dd></div>
-                                <div><dt>-177013</dt><dd>Tổng Chi Phí</dd></div>
-                            </dl>
-                        </div>
-                        <div class="transfer">
-                            <div class="transfer-logo"><img src="https://brandeps.com/logo-download/M/Materialize-CSS-logo-vector-01.svg" alt="Warner Bros Logo" /></div>
-                            <dl class="transfer-details">
-                                <div><dt>CUỘC CHIẾN CHƯA NGUÔI.</dt></div>
-                                <div><dt>177013</dt><dd>Số lượng ước tính</dd></div>
-                                <div><dt>28 Oct. 21</dt><dd>ngày diễn ra</dd></div>
-                                <div><dt>-177013</dt><dd>Tổng Chi Phí</dd></div>
-                            </dl>
-                        </div>
-                    </div>
-                </section>
-            </div>
 
-            <!-- Sidebar -->
-            <div class="app-body-sidebar">
-                <section class="payment-section">
-                    <h2>Tài khoảng số</h2>
-                    <div class="payment-section-header">
+                    <!-- Bảng Danh Sách Sản Phẩm -->
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Mô tả</th>
+                                    <th>Ảnh</th>
+                                    <th>Giá</th>
+                                    <th>Phân loại</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="product : ${products}">
+                                    <td th:text="${product.id}"></td>
+                                    <td th:text="${product.nameProduct}"></td>
+                                    <td th:text="${product.description}"></td>
+                                    <td>
+                                        <img th:if="${product.photo != null and product.photo != '/images/default-product.jpg'}" 
+                                             th:src="@{${product.photo}}" 
+                                             alt="Product Photo" 
+                                             class="w-10 h-10 object-cover">
+                                        <img th:unless="${product.photo != null and product.photo != '/images/default-product.jpg'}" 
+                                             th:src="@{/images/default-product.jpg}" 
+                                             alt="Default Product" 
+                                             class="w-10 h-10 object-cover">
+                                    </td>
+                                    <td th:text="${product.price}"></td>
+                                    <td th:text="${product.classify}"></td>
+                                    <td class="text-center space-x-2">
+                                        <a th:href="@{/edit-product/{id}(id=${product.id})}" class="btn-warning">
+                                            <i class="ph-pencil-simple"></i> Sửa
+                                        </a>
+                                        <form th:action="@{/delete-product/{id}(id=${product.id})}" method="post" style="display: inline;">
+                                            <button type="submit" class="btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xoá sản phẩm này?');">
+                                                <i class="ph-trash"></i> Xoá
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="payments">
-                        <div class="payment">
-                            <div class="card green"><span>TRẦN VĂN NHÂN</span><span>•••• 4012</span></div>
-                            <div class="payment-details">
-                                <h3>Internet</h3>
-                                <div><span>$ 2,110</span><button class="icon-button"><i class="ph-caret-right-bold"></i></button></div>
-                            </div>
-                        </div>
-                        <div class="payment">
-                            <div class="card olive"><span>TRẦN VĂN NHÂN</span><span>•••• 2228</span></div>
-                            <div class="payment-details">
-                                <h3>Universal</h3>
-                                <div><span>$ 5,621</span><button class="icon-button"><i class="ph-caret-right-bold"></i></button></div>
-                            </div>
-                        </div>
-                        <div class="payment">
-                            <div class="card gray"><span>TRẦN VĂN NHÂN</span><span>•••• 5214</span></div>
-                            <div class="payment-details">
-                                <h3>Gold</h3>
-                                <div><span>$ 3,473</span><button class="icon-button"><i class="ph-caret-right-bold"></i></button></div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                </div>
             </div>
         </div>
     </div>
