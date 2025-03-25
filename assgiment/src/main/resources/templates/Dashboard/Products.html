@@ -21,9 +21,9 @@
                 <input type="hidden" name="search" th:value="${searchQuery}">
                 <select class="filter-select" name="classify" onchange="this.form.submit()">
                     <option value="" th:selected="${selectedClassify == ''}">Danh mục</option>
-                    <option value="lipstick" th:selected="${selectedClassify == 'Lipstick'}">Son môi</option>
+                    <option value="lipstick" th:selected="${selectedClassify == 'lipstick'}">Son môi</option>
                     <option value="Sunscreen" th:selected="${selectedClassify == 'Sunscreen'}">Kem chống nắng</option>
-                    <option value="Skincare" th:selected="${selectedClassify == 'Skincare'}">Dướng da</option>
+                    <option value="Skincare" th:selected="${selectedClassify == 'Skincare'}">Dưỡng da</option>
                     <option value="Foundation" th:selected="${selectedClassify == 'Foundation'}">Phấn nền</option>
                     <option value="Perfume" th:selected="${selectedClassify == 'Perfume'}">Nước hoa</option>
                     <option value="Makeupremover" th:selected="${selectedClassify == 'Makeupremover'}">Tẩy trang</option>
@@ -41,32 +41,37 @@
 
         <!-- Product List -->
         <section class="featured-products">
-            <div class="product-list">
-                <div class="product-item" th:each="product : ${products}">
-                    <span class="product-badge" th:text="${product.classify}"></span>
-                    <img th:src="@{${product.photo}}" 
-                         th:alt="${product.nameProduct}"
-                         data-bs-toggle="modal"
-                         data-bs-target="#productModal"
-                         th:attr="data-product-id=${product.id}, 
-                                  data-product-description=${product.description}">
-                    <h3 th:text="${product.nameProduct}"></h3>
-                    <p th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')} + ' VND'"></p>
-                    
-                    <form method="post" th:action="@{/add-to-cart}">
-                        <input type="hidden" name="productId" th:value="${product.id}">
-                        <input type="hidden" name="page" th:value="${currentPage}">
-                        <input type="hidden" name="sort" th:value="${selectedSort}">
-                        <input type="hidden" name="classify" th:value="${selectedClassify}">
-                        <input type="hidden" name="search" th:value="${searchQuery}">
-                        <button type="submit" class="add-to-cart-btn">Thêm vào giỏ</button>
-                    </form>
+            <th:block th:if="${products == null or products.isEmpty()}">
+                <p>Không tìm thấy sản phẩm nào.</p>
+            </th:block>
+            <th:block th:unless="${products == null or products.isEmpty()}">
+                <div class="product-list">
+                    <div class="product-item" th:each="product : ${products}">
+                        <span class="product-badge" th:text="${product.classify}"></span>
+                        <img th:src="@{${product.photo}}" 
+                             th:alt="${product.nameProduct}"
+                             data-bs-toggle="modal"
+                             data-bs-target="#productModal"
+                             th:attr="data-product-id=${product.id}, 
+                                      data-product-description=${product.description}">
+                        <h3 th:text="${product.nameProduct}"></h3>
+                        <p th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')} + ' VND'"></p>
+                        
+                        <form method="post" th:action="@{/add-to-cart}">
+                            <input type="hidden" name="productId" th:value="${product.id}">
+                            <input type="hidden" name="page" th:value="${currentPage}">
+                            <input type="hidden" name="sort" th:value="${selectedSort}">
+                            <input type="hidden" name="classify" th:value="${selectedClassify}">
+                            <input type="hidden" name="search" th:value="${searchQuery}">
+                            <button type="submit" class="add-to-cart-btn">Thêm vào giỏ</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
+            </th:block>
         </section>
 
         <!-- Pagination -->
-        <div class="pagination">
+        <div class="pagination" th:unless="${totalPages == null or totalPages <= 1}">
             <a th:if="${currentPage > 0}" 
                th:href="@{/product(page=${currentPage - 1}, size=12, sort=${selectedSort}, classify=${selectedClassify}, search=${searchQuery})}"
                class="page-item">«</a>
@@ -115,7 +120,6 @@
             </div>
         </div>
     </main>
-
 
     <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function() {

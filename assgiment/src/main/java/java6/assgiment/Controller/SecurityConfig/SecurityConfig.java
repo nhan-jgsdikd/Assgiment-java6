@@ -41,12 +41,17 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/signup/**", "/", "/product", "/css/**", "/js/**").permitAll()
-                .requestMatchers("/dashboard/**", "/Staff/**", "/Products/**", "/Order/**", "/Collaborate/**", "/Feedback/**").hasRole("ADMIN") // Sử dụng hasRole thay vì hasAuthority
+                .requestMatchers("/login", "/signup/**", "/", "/product", "/css/**", "/js/**", "/img/**").permitAll() // Thêm /images/**
+                .requestMatchers("/dashboard/**", "/Staff/**", "/Products/**", "/Order/**", "/Collaborate/**", "/Feedback/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
-            .csrf(AbstractHttpConfigurer::disable); // Tắt CSRF để test dễ hơn
-
+            .exceptionHandling(ex -> ex
+            .authenticationEntryPoint((request, response, authException) -> 
+                response.sendRedirect("/login")) // Chuyển hướng về trang login nếu chưa đăng nhập
+        )
+            .csrf(AbstractHttpConfigurer::disable); // Tắt CSRF để dễ test
+    
         return http.build();
     }
+    
 }
