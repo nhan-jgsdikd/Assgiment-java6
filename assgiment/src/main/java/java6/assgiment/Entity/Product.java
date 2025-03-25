@@ -8,24 +8,31 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(columnDefinition = "VARCHAR(255)")
+    @Column(name = "name_product", length = 255, nullable = false)
     private String nameProduct;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(columnDefinition = "VARCHAR(255)")
+    @Column(name = "photo", length = 255)
     private String photo;
 
-    @Column(columnDefinition = "DOUBLE")
-    private double price;
+    @Column(name = "price", nullable = false)
+    private Double price;
 
-    @Column(columnDefinition = "VARCHAR(255)")
+    @Column(name = "classify", length = 255)
     private String classify;
 
+    @Column(name = "stock", nullable = false, columnDefinition = "INT DEFAULT 0")
+    private Integer stock;
+
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isDeleted;
 }

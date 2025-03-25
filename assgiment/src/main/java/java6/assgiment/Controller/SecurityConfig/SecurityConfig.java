@@ -41,15 +41,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/signup/**", "/", "/product", "/css/**", "/js/**", "/img/**").permitAll() // Thêm /images/**
+                .requestMatchers("/login", "/signup/**", "/", "/product", "/css/**", "/js/**", "/img/**").permitAll() 
                 .requestMatchers("/dashboard/**", "/Staff/**", "/Products/**", "/Order/**", "/Collaborate/**", "/Feedback/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .exceptionHandling(ex -> ex
             .authenticationEntryPoint((request, response, authException) -> 
-                response.sendRedirect("/login")) // Chuyển hướng về trang login nếu chưa đăng nhập
+                response.sendRedirect("/login"))
         )
-            .csrf(AbstractHttpConfigurer::disable); // Tắt CSRF để dễ test
+            .csrf(AbstractHttpConfigurer::disable);
     
         return http.build();
     }

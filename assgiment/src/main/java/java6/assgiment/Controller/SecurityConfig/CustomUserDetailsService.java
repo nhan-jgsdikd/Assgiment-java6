@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java6.assgiment.DAO.UserDAO;
 import java6.assgiment.Entity.User;
+import java6.assgiment.Entity.User.Role;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -32,8 +33,13 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = optionalUser.orElseThrow(() -> 
             new UsernameNotFoundException("Không tìm thấy tài khoản với email: " + username));
 
-        // Đảm bảo role có tiền tố "ROLE_"
-        String role = user.getRole().startsWith("ROLE_") ? user.getRole() : "ROLE_" + user.getRole();
+        // Kiểm tra trạng thái isDeleted
+        if (user.getIsDeleted()) {
+            throw new UsernameNotFoundException("Tài khoản với email " + username + " đã bị xóa.");
+        }
+
+        // Lấy role từ enum và thêm tiền tố "ROLE_" nếu cần
+        String role = "ROLE_" + user.getRole().name();
         List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
 
         return new org.springframework.security.core.userdetails.User(

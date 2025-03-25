@@ -10,9 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
-import java6.assgiment.DAO.BannerDAO;
 import java6.assgiment.DAO.ProductDAO;
-import java6.assgiment.Entity.Banner;
 import java6.assgiment.Entity.Product;
 
 @Controller
@@ -27,14 +25,11 @@ public class IndexController {
     @Autowired
     ProductDAO productDAO;
 
-    @Autowired
-    BannerDAO bannerDAO;
+
 
     @GetMapping("/")
     public String home(Model model) {
 
-        List<Banner> bannerProducts = bannerDAO.findAll(); 
-        model.addAttribute("bannerProducts", bannerProducts);
         
         List<Product> products = productDAO.findAll();
         List<Product> limitedProducts = products.stream().limit(8).collect(Collectors.toList());

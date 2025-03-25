@@ -1,5 +1,6 @@
 package java6.assgiment.DAO;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -19,4 +20,6 @@ public interface ProductDAO extends JpaRepository<Product, Long> {
     Page<Product> findByNameProductContainingIgnoreCase(String nameProduct, Pageable pageable);
 
     Optional<Product> findById(Integer id);
+
+    List<Product> findByIsDeletedFalse();
 }
