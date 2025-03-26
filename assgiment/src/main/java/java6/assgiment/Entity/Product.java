@@ -30,8 +30,8 @@ public class Product {
     @Column(name = "classify", length = 255)
     private String classify;
 
-    @Column(name = "stock", nullable = false, columnDefinition = "INT DEFAULT 0")
-    private Integer stock;
+    @Column(name = "quanlity", nullable = false, columnDefinition = "INT DEFAULT 0")
+    private Integer quanlity;
 
     @Column(name = "is_deleted", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean isDeleted;

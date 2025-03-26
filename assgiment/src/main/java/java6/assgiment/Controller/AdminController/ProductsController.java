@@ -79,7 +79,7 @@ public class ProductsController {
                 redirectAttributes.addFlashAttribute("error", "Giá sản phẩm phải lớn hơn 0!");
                 return product.getId() == null ? "redirect:/edit-product" : "redirect:/edit-product/" + product.getId();
             }
-            if (product.getStock() == null || product.getStock() < 0) {
+            if (product.getQuanlity() == null || product.getQuanlity() < 0) {
                 redirectAttributes.addFlashAttribute("error", "Số lượng tồn kho không được âm!");
                 return product.getId() == null ? "redirect:/edit-product" : "redirect:/edit-product/" + product.getId();
             }

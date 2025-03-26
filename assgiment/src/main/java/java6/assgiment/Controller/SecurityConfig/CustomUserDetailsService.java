@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java6.assgiment.DAO.UserDAO;
 import java6.assgiment.Entity.User;
-import java6.assgiment.Entity.User.Role;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

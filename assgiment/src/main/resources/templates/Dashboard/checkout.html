@@ -1,45 +1,58 @@
 <!DOCTYPE html>
-<html lang="en" th:replace="~{/layouts/template :: view(~{::main})}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{/Navar/Layout :: view(~{::main})}">
 <body>
   <main class="content">
     <style>
-      .content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 300px;
-        text-align: center;
-        background-color: #f8f9fa;
-        padding: 20px;
-      }
-      .content h1 {
-        font-size: 2.5rem;
-        color: #28a745;
-        margin-bottom: 20px;
-      }
-      .content p {
-        font-size: 1.25rem;
-        color: #333;
-        margin-bottom: 30px;
-      }
-      .content .btn-primary {
-        font-size: 1rem;
-        padding: 10px 20px;
-        background-color: #007bff;
-        border: none;
-        border-radius: 5px;
-        color: #fff;
-        text-decoration: none;
-        transition: background-color 0.3s ease;
-      }
-      .content .btn-primary:hover {
-        background-color: #0056b3;
-      }
+      .content { max-width: 1200px; margin: 20px auto; padding: 20px; }
+      h1 { font-size: 2rem; color: #333; margin-bottom: 20px; }
+      .checkout-details { display: flex; justify-content: space-between; }
+      .cart-summary, .shipping-form { width: 48%; }
+      .cart-summary h2, .shipping-form h2 { font-size: 1.5rem; margin-bottom: 15px; }
+      .item { border-bottom: 1px solid #ddd; padding: 10px 0; }
+      .item:last-child { border-bottom: none; }
+      .total-row { font-weight: bold; margin-top: 10px; }
+      .shipping-form label { display: block; margin: 10px 0 5px; }
+      .shipping-form input { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; }
+      .checkout-btn { background-color: #28a745; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+      .checkout-btn:hover { background-color: #218838; }
     </style>
-    <h1>Thanh Toán Thành Công!</h1>
-    <p th:text="${message}"></p>
-    <a href="/products" class="btn btn-primary">Tiếp tục mua sắm</a>
+
+    <h1>Xác nhận thanh toán</h1>
+    <div class="checkout-details">
+      <!-- Tóm tắt giỏ hàng -->
+      <div class="cart-summary">
+        <h2>Sản phẩm trong giỏ hàng</h2>
+        <div class="item" th:each="item : ${cartItems}">
+          <p th:text="${item.product.nameProduct + ' (' + item.quantity + ' x ' + #numbers.formatDecimal(item.price, 0, 'COMMA', 2, 'POINT') + 'đ)'}"></p>
+          <p>Tổng: <span th:text="${#numbers.formatDecimal(item.subTotal, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span></p>
+        </div>
+        <div class="total-row">
+          <p>Tổng tiền hàng: <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span></p>
+          <p>Giảm giá: <span th:text="${#numbers.formatDecimal(totalDiscount, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span></p>
+          <p>Tổng thanh toán: <span th:text="${#numbers.formatDecimal(totalPayment, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span></p>
+        </div>
+      </div>
+
+      <!-- Form nhập địa chỉ giao hàng -->
+      <div class="shipping-form">
+        <h2>Thông tin giao hàng</h2>
+        <form th:action="@{/confirm-checkout}" method="post">
+          <label for="shippingAddressLine">Địa chỉ:</label>
+          <input type="text" id="shippingAddressLine" name="shippingAddressLine" th:value="${user.addressLine}" required>
+          
+          <label for="shippingWard">Phường/Xã:</label>
+          <input type="text" id="shippingWard" name="shippingWard" th:value="${user.ward}" required>
+          
+          <label for="shippingDistrict">Quận/Huyện:</label>
+          <input type="text" id="shippingDistrict" name="shippingDistrict" th:value="${user.district}" required>
+          
+          <label for="shippingCity">Tỉnh/Thành phố:</label>
+          <input type="text" id="shippingCity" name="shippingCity" th:value="${user.city}" required>
+          
+          <button type="submit" class="checkout-btn">Xác nhận thanh toán</button>
+        </form>
+      </div>
+    </div>
   </main>
 </body>
 </html>

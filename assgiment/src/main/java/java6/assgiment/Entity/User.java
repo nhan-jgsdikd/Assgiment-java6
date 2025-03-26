@@ -58,8 +58,8 @@ public class User {
         USER, ADMIN;
 
         boolean startsWith(String string) {
-            // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'startsWith'");
         }
     }
+
 }

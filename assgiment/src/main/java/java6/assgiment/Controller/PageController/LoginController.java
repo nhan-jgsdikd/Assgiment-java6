@@ -7,7 +7,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +22,6 @@ public class LoginController {
 
     @Autowired
     private UserDAO userDAO;
-
-    @Autowired
-    private BCryptPasswordEncoder encoder;
 
     @Autowired
     private AuthenticationManager authenticationManager;

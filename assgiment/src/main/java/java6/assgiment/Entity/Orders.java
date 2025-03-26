@@ -53,6 +53,6 @@ public class Orders {
     private List<OrderDetail> orderDetails;
 
     public enum OrderStatus {
-        PREPARING, SHIPPING, DELIVERED
+        PREPARING, SHIPPING, DELIVERED, CANCELLED
     }
 }
