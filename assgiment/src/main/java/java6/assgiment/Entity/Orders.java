@@ -49,6 +49,7 @@ public class Orders {
     @Column(name = "shipping_city", length = 255)
     private String shippingCity;
 
+    // Sửa từ OrderDetailDAO thành OrderDetail
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<OrderDetail> orderDetails;
 
