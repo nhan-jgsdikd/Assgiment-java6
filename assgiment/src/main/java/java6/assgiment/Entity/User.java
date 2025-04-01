@@ -1,9 +1,8 @@
 package java6.assgiment.Entity;
 
-import java.util.List;
-
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
 @Data
 @Builder
@@ -54,11 +53,19 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Orders> orders;
 
+    // Thêm mối quan hệ với Voucher
+    @ManyToMany
+    @JoinTable(
+        name = "user_vouchers",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "voucher_id")
+    )
+    private List<Voucher> vouchers;
+
     public enum Role {
         USER, ADMIN;
 
         boolean startsWith(String string) {
-            // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'startsWith'");
         }
     }

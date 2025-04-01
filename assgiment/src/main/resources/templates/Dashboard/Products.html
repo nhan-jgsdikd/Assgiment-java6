@@ -48,15 +48,12 @@
                 <div class="product-list">
                     <div class="product-item" th:each="product : ${products}">
                         <span class="product-badge" th:text="${product.classify}"></span>
-                        <img th:src="@{${product.photo}}" 
-                             th:alt="${product.nameProduct}"
-                             data-bs-toggle="modal"
-                             data-bs-target="#productModal"
-                             th:attr="data-product-id=${product.id}, 
-                                      data-product-description=${product.description}">
+                        <!-- Sửa đổi cú pháp th:href để rõ ràng hơn -->
+                        <a th:href="@{/product/{id}(id=${product.id})}">
+                            <img th:src="@{${product.photo}}" th:alt="${product.nameProduct}">
+                        </a>
                         <h3 th:text="${product.nameProduct}"></h3>
                         <p th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')} + ' VND'"></p>
-                        
                         <form method="post" th:action="@{/add-to-cart}">
                             <input type="hidden" name="productId" th:value="${product.id}">
                             <input type="hidden" name="page" th:value="${currentPage}">
@@ -83,69 +80,6 @@
                th:href="@{/product(page=${currentPage + 1}, size=12, sort=${selectedSort}, classify=${selectedClassify}, search=${searchQuery})}"
                class="page-item">»</a>
         </div>
-
-        <!-- Product Modal -->
-        <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="productModalLabel">Chi tiết sản phẩm</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <img id="modalProductImage" src="" alt="Product Image" class="img-fluid">
-                            </div>
-                            <div class="col-md-6">
-                                <h3 id="modalProductName"></h3>
-                                <p><strong>Phân loại:</strong> <span id="modalProductClassify"></span></p>
-                                <p><strong>Giá:</strong> <span id="modalProductPrice"></span> VND</p>
-                                <p><strong>Mô tả:</strong> <span id="modalProductDescription"></span></p>
-                                <form method="post" th:action="@{/add-to-cart}">
-                                    <input type="hidden" name="productId" id="modalProductId">
-                                    <input type="hidden" name="page" th:value="${currentPage}">
-                                    <input type="hidden" name="sort" th:value="${selectedSort}">
-                                    <input type="hidden" name="classify" th:value="${selectedClassify}">
-                                    <input type="hidden" name="search" th:value="${searchQuery}">
-                                    <button type="submit" class="btn btn-primary mt-3">Thêm vào giỏ hàng</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </main>
-
-    <script th:inline="javascript">
-        document.addEventListener('DOMContentLoaded', function() {
-            const productItems = document.querySelectorAll('.product-item img');
-            
-            productItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    const productItem = this.closest('.product-item');
-                    const productId = this.getAttribute('data-product-id');
-                    
-                    document.getElementById('modalProductId').value = productId;
-                    
-                    const productImage = this.getAttribute('src');
-                    const productName = productItem.querySelector('h3').textContent;
-                    const productPrice = productItem.querySelector('p').textContent.replace(' VND', '');
-                    const productClassify = productItem.querySelector('.product-badge').textContent;
-                    const productDescription = this.getAttribute('data-product-description');
-                    
-                    document.getElementById('modalProductImage').src = productImage;
-                    document.getElementById('modalProductName').textContent = productName;
-                    document.getElementById('modalProductPrice').textContent = productPrice;
-                    document.getElementById('modalProductClassify').textContent = productClassify;
-                    document.getElementById('modalProductDescription').textContent = productDescription || 'Không có mô tả';
-                });
-            });
-        });
-    </script>
 </body>
 </html>

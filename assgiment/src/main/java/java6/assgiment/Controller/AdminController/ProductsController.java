@@ -16,12 +16,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpSession;
 import java6.assgiment.DAO.ProductDAO;
+import java6.assgiment.DAO.UserDAO;
 import java6.assgiment.Entity.Product;
+import java6.assgiment.Entity.User;
 
 @Controller
 public class ProductsController {
 
+        @Autowired
+    private HttpSession session;
+
+        @Autowired
+    private UserDAO userDAO;
+    
     @Autowired
     private ProductDAO productDAO;
 
@@ -132,5 +141,26 @@ public class ProductsController {
             redirectAttributes.addFlashAttribute("error", "Không tìm thấy sản phẩm để xóa.");
         }
         return "redirect:/Products";
+    }
+
+        @GetMapping("/AllProducts")
+    public String AllProducts(Model model) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("user", user);
+        List<User> users = userDAO.findAll();
+        model.addAttribute("users", users);
+
+
+        List<Product> products = productDAO.findByIsDeletedFalse();
+        products.forEach(p -> {
+            if (p.getPhoto() == null || p.getPhoto().isEmpty()) {
+                p.setPhoto("/img/default-product.jpg"); // Sửa đường dẫn cho đồng bộ
+            }
+        });
+        model.addAttribute("products", products);
+        return "Admin/fragments/AllProduct";
     }
 }

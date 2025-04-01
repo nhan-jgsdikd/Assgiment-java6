@@ -56,17 +56,20 @@
             <div class="brands">
                 <section class="top-brands">
                     <h1>TOP SẢN PHẨM BÁN CHẠY</h1>
-                    <div class="brands-container">
-                        <button class="nav-button prev-button">&lt;</button>
-                        <div class="brands-inner">
-                            <div class="brand-item" th:each="product : ${specificProducts}">
-                                <img th:src="@{${product.photo}}" th:alt="${product.nameProduct}">
-                                <div class="brand-card">
-                                    <h3 th:text="${product.nameProduct}">Tên sản phẩm</h3>
+                    <div class="options">
+                        <div class="option" th:each="product, stat : ${specificProducts}" 
+                             th:style="'--optionBackground:url(/' + ${product.photo} + ');'"
+                             th:classappend="${stat.index == 0} ? 'active' : ''">
+                            <div class="shadow"></div>
+                            <div class="label">
+                                <div class="icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="info">
+                                    <div class="main" style="color: black;" th:text="${product.nameProduct}">Tên sản phẩm</div>
                                 </div>
                             </div>
                         </div>
-                        <button class="nav-button next-button">&gt;</button>
                     </div>
                 </section>
             </div>
@@ -81,6 +84,15 @@
                 </div>
             </div>
         <script>
+   document.addEventListener('DOMContentLoaded', () => {
+    const options = document.querySelectorAll('.option');
+    options.forEach(option => {
+        option.addEventListener('click', () => {
+            options.forEach(opt => opt.classList.remove('active'));
+            option.classList.add('active');
+        });
+    });
+});
             let currentSlide = 0;
             const slides = document.querySelector('.slides');
             const totalSlides = document.querySelectorAll('.slides img').length;

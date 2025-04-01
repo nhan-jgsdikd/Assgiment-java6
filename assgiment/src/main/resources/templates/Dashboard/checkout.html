@@ -1,45 +1,496 @@
 <!DOCTYPE html>
-<html lang="en" th:replace="~{/layouts/template :: view(~{::main})}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{/Navar/Layout :: view(~{::main})}">
 <body>
   <main class="content">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
     <style>
       .content {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+        font-family: 'Poppins', sans-serif;
+      }
+
+      h1 {
+        font-size: 2rem;
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 40px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        position: relative;
+        padding-bottom: 15px;
+      }
+
+      h1:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: #3498db;
+      }
+
+      .checkout-container {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 30px;
+      }
+
+      .cart-summary {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      }
+
+      .shipping-form {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      }
+
+      h2 {
+        font-size: 1.4rem;
+        color: #2c3e50;
+        margin-bottom: 25px;
+        font-weight: 600;
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      h2 i {
+        color: #3498db;
+        font-size: 1.2em;
+      }
+
+      .item {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 0;
+        border-bottom: 1px dashed #e0e0e0;
+        font-size: 15px;
+        color: #555;
+        transition: transform 0.2s ease;
+      }
+
+      .item:hover {
+        transform: translateX(5px);
+      }
+
+      .total-row {
+        padding: 20px 0;
+        font-weight: 600;
+        color: #2c3e50;
+        background: #ffffff;
+        border-radius: 8px;
+        margin-top: 15px;
+      }
+
+      .total-row p {
+        display: flex;
+        justify-content: space-between;
+        margin: 12px 0;
+        font-size: 16px;
+        padding: 8px 15px;
+        background: #f8f9fa;
+        border-radius: 6px;
+      }
+
+      .total-row p:last-child {
+        color: #e74c3c;
+        font-size: 18px;
+        background: #fff5f5;
+      }
+
+      .payment-methods {
+        margin: 25px 0;
+      }
+
+      .payment-option {
+        display: flex;
+        align-items: center;
+        padding: 18px;
+        margin-bottom: 15px;
+        border-radius: 12px;
+        background: #f7f9fc;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        position: relative;
+      }
+
+      .payment-option.active {
+        border-color: #3498db;
+        background: #f0f8ff;
+      }
+
+      .payment-option.active:after {
+        content: "\f058"; /* Font Awesome check-circle */
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #3498db;
+        font-size: 1.4em;
+      }
+
+      .payment-icon {
+        width: 45px;
+        height: 45px;
+        margin-right: 15px;
+        object-fit: contain;
+        border-radius: 8px;
+        padding: 5px;
+        background: #fff;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
+
+      .payment-description {
+        font-size: 13px;
+        color: #7f8c8d;
+        margin-left: 10px;
+        line-height: 1.4;
+      }
+
+      .form-group {
+        position: relative;
+        margin-bottom: 25px;
+      }
+
+      .form-group i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #7f8c8d;
+        font-size: 16px;
+      }
+
+      .shipping-form input {
+        width: 100%;
+        padding: 12px 12px 12px 40px;
+        border: 2px solid #e0e0e0;
+        background: #f7f9fc;
+        border-radius: 8px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+      }
+
+      .shipping-form input:focus {
+        border-color: #3498db;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
+      }
+
+      .checkout-btn {
+        background: #3498db;
+        color: white;
+        padding: 15px;
+        border: none;
+        border-radius: 10px;
+        width: 100%;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+        display: flex;
         align-items: center;
         justify-content: center;
-        height: 300px;
-        text-align: center;
-        background-color: #f8f9fa;
-        padding: 20px;
+        gap: 10px;
       }
-      .content h1 {
-        font-size: 2.5rem;
-        color: #28a745;
-        margin-bottom: 20px;
+
+      .checkout-btn:hover {
+        background: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52,152,219,0.3);
       }
-      .content p {
-        font-size: 1.25rem;
-        color: #333;
-        margin-bottom: 30px;
+
+      .checkout-btn:disabled {
+        background: #bdc3c7;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
       }
-      .content .btn-primary {
-        font-size: 1rem;
-        padding: 10px 20px;
-        background-color: #007bff;
-        border: none;
-        border-radius: 5px;
-        color: #fff;
-        text-decoration: none;
-        transition: background-color 0.3s ease;
+
+      .checkout-btn i {
+        animation: spin 1s linear infinite;
+        display: none;
       }
-      .content .btn-primary:hover {
-        background-color: #0056b3;
+
+      @keyframes spin {
+        100% { transform: rotate(360deg); }
+      }
+
+      .error-message {
+        color: #e74c3c;
+        font-size: 12px;
+        margin-top: 5px;
+        display: none;
+      }
+
+      @media (max-width: 992px) {
+        .checkout-container {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+        
+        .cart-summary {
+          order: 2;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .content {
+          margin: 20px auto;
+          padding: 0 15px;
+        }
+        
+        .payment-option {
+          padding: 15px;
+        }
+        
+        .payment-icon {
+          width: 35px;
+          height: 35px;
+        }
       }
     </style>
-    <h1>Thanh Toán Thành Công!</h1>
-    <p th:text="${message}"></p>
-    <a href="/products" class="btn btn-primary">Tiếp tục mua sắm</a>
+
+    <h1>Thanh Toán Đơn Hàng</h1>
+    
+    <div class="checkout-container">
+      <!-- Cột trái - Thông tin đơn hàng -->
+      <div class="cart-summary">
+        <h2><i class="fa-solid fa-cart-shopping"></i> Giỏ Hàng</h2>
+        <div class="item" th:each="item : ${cartItems}">
+          <span th:text="${item.product.nameProduct + ' (' + item.quantity + ' x ' + #numbers.formatDecimal(item.price, 0, 'COMMA', 2, 'POINT') + 'đ)'}"></span>
+          <span th:text="${#numbers.formatDecimal(item.price * item.quantity, 0, 'COMMA', 2, 'POINT') + 'đ'}"></span>
+        </div>
+        <div class="total-row">
+          <p>Tổng tiền hàng: <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 2, 'POINT') + 'đ'}"></span></p>
+          <p>Giảm giá: <span th:text="${#numbers.formatDecimal(totalDiscount, 0, 'COMMA', 2, 'POINT') + 'đ'}"></span></p>
+          <p>Tổng thanh toán: <span th:text="${#numbers.formatDecimal(totalPayment, 0, 'COMMA', 2, 'POINT') + 'đ'}"></span></p>
+        </div>
+      </div>
+
+      <!-- Cột phải - Thông tin thanh toán -->
+      <div class="shipping-form">
+        <h2><i class="fa-solid fa-credit-card"></i> Phương Thức Thanh Toán</h2>
+        <div class="payment-methods">
+          <div class="payment-option" onclick="selectPayment('zalopay')" id="zalopayOption">
+            <input type="radio" name="paymentMethod" id="zalopay" value="zalopay" hidden required>
+            <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-ZaloPay-Square.png" class="payment-icon" alt="ZaloPay">
+            <div>
+              <label for="zalopay">Thanh toán bằng ZaloPay</label>
+              <div class="payment-description">
+                Thanh toán nhanh chóng qua ví ZaloPay
+              </div>
+            </div>
+          </div>
+        
+          <div class="payment-option active" onclick="selectPayment('cod')" id="codOption">
+            <input type="radio" name="paymentMethod" id="cod" value="cod" hidden checked>
+            <img src="https://cdn0.iconfinder.com/data/icons/business-and-finance-outline-icons/50/Business-icons-06-512.png" class="payment-icon" alt="COD">
+            <div>
+              <label for="cod">Thanh toán khi nhận hàng</label>
+              <div class="payment-description">
+                Thanh toán tiền mặt khi nhận hàng
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h2 style="margin-top: 25px;"><i class="fa-solid fa-truck-fast"></i> Thông Tin Giao Hàng</h2>
+        <form th:action="@{/confirm-checkout}" method="post" id="checkoutForm">
+          <input type="hidden" name="paymentMethod" id="selectedPaymentMethod" value="cod">
+          
+          <div class="form-group">
+            <i class="fa-solid fa-house"></i>
+            <input type="text" id="shippingAddressLine" name="shippingAddressLine" 
+                   th:value="${user.addressLine}" placeholder="Số nhà, tên đường" required>
+            <span class="error-message" id="addressError">Vui lòng nhập địa chỉ!</span>
+          </div>
+          
+          <div class="form-group">
+            <i class="fa-solid fa-map-pin"></i>
+            <input type="text" id="shippingWard" name="shippingWard" 
+                   th:value="${user.ward}" placeholder="Phường/Xã" required>
+            <span class="error-message" id="wardError">Vui lòng nhập phường/xã!</span>
+          </div>
+          
+          <div class="form-group">
+            <i class="fa-solid fa-map"></i>
+            <input type="text" id="shippingDistrict" name="shippingDistrict" 
+                   th:value="${user.district}" placeholder="Quận/Huyện" required>
+            <span class="error-message" id="districtError">Vui lòng nhập quận/huyện!</span>
+          </div>
+          
+          <div class="form-group">
+            <i class="fa-solid fa-city"></i>
+            <input type="text" id="shippingCity" name="shippingCity" 
+                   th:value="${user.city}" placeholder="Tỉnh/Thành phố" required>
+            <span class="error-message" id="cityError">Vui lòng nhập tỉnh/thành phố!</span>
+          </div>
+          
+          <button type="submit" class="checkout-btn" id="submitButton">
+            <i class="fa-solid fa-spinner"></i>
+            <span id="btnText">Xác Nhận Đặt Hàng</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      let selectedPayment = 'cod'; // Default payment method
+
+      // Payment method selection
+      function selectPayment(method) {
+        const options = document.querySelectorAll('.payment-option');
+        options.forEach(option => option.classList.remove('active'));
+        
+        const selectedOption = document.getElementById(`${method}Option`);
+        selectedOption.classList.add('active');
+        
+        document.getElementById(method).checked = true;
+        document.getElementById('selectedPaymentMethod').value = method;
+        selectedPayment = method;
+        
+        validateForm();
+      }
+
+      // Form validation
+      function validateForm() {
+        const address = document.getElementById('shippingAddressLine').value.trim();
+        const ward = document.getElementById('shippingWard').value.trim();
+        const district = document.getElementById('shippingDistrict').value.trim();
+        const city = document.getElementById('shippingCity').value.trim();
+        
+        const addressError = document.getElementById('addressError');
+        const wardError = document.getElementById('wardError');
+        const districtError = document.getElementById('districtError');
+        const cityError = document.getElementById('cityError');
+        
+        let isValid = true;
+
+        if (!address) {
+          addressError.style.display = 'block';
+          isValid = false;
+        } else {
+          addressError.style.display = 'none';
+        }
+
+        if (!ward) {
+          wardError.style.display = 'block';
+          isValid = false;
+        } else {
+          wardError.style.display = 'none';
+        }
+
+        if (!district) {
+          districtError.style.display = 'block';
+          isValid = false;
+        } else {
+          districtError.style.display = 'none';
+        }
+
+        if (!city) {
+          cityError.style.display = 'block';
+          isValid = false;
+        } else {
+          cityError.style.display = 'none';
+        }
+
+        const submitButton = document.getElementById('submitButton');
+        submitButton.disabled = !isValid;
+        return isValid;
+      }
+
+      // Handle form submission based on payment method
+      document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
+
+        if (!validateForm()) {
+          return;
+        }
+
+        const submitButton = document.getElementById('submitButton');
+        const spinner = submitButton.querySelector('i');
+        const btnText = document.getElementById('btnText');
+
+        submitButton.disabled = true;
+        spinner.style.display = 'inline-block';
+        btnText.textContent = 'Đang xử lý...';
+
+        if (selectedPayment === 'zalopay') {
+          handleZaloPayPayment();
+        } else if (selectedPayment === 'cod') {
+          document.getElementById('checkoutForm').submit(); // Submit to /confirm-checkout
+        }
+      });
+
+      // Handle ZaloPay payment API call
+      function handleZaloPayPayment() {
+        const formData = {
+          shippingAddressLine: document.getElementById('shippingAddressLine').value,
+          shippingWard: document.getElementById('shippingWard').value,
+          shippingDistrict: document.getElementById('shippingDistrict').value,
+          shippingCity: document.getElementById('shippingCity').value,
+          paymentMethod: 'zalopay',
+          totalPayment: /* Pass totalPayment from Thymeleaf */ parseFloat(/*[[${totalPayment}]]*/ 0)
+        };
+
+        fetch('/zalopay-payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success && data.paymentUrl) {
+            window.location.href = data.paymentUrl; // Redirect to ZaloPay payment page
+          } else {
+            alert('Lỗi thanh toán ZaloPay: ' + (data.message || 'Không thể xử lý thanh toán'));
+            resetButton();
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Đã xảy ra lỗi khi kết nối với ZaloPay!');
+          resetButton();
+        });
+      }
+
+      // Reset button state on error
+      function resetButton() {
+        const submitButton = document.getElementById('submitButton');
+        const spinner = submitButton.querySelector('i');
+        const btnText = document.getElementById('btnText');
+        
+        submitButton.disabled = false;
+        spinner.style.display = 'none';
+        btnText.textContent = 'Xác Nhận Đặt Hàng';
+      }
+
+      // Real-time input validation
+      const inputs = document.querySelectorAll('.shipping-form input');
+      inputs.forEach(input => {
+        input.addEventListener('input', validateForm);
+      });
+
+      // Initial validation
+      validateForm();
+    </script>
   </main>
 </body>
 </html>

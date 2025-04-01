@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{/Navar/Layout :: view(~{::main})}">
+<body>
+    <main class="profile-container">
+        <link rel="stylesheet" href="/css/profile.css">
+        <!-- Sidebar -->
+        <div class="profile-sidebar">
+            <ul>
+                <li><a href="/profile">Trang Cá Nhân</a></li>
+                <li><a href="/profileaccount">Quản Lý Tài Khoản</a></li>
+                <li><a href="/profileddress" class="active">Địa Chỉ</a></li>
+                <li><a href="/profileoder">Quản Lý Đơn Hàng</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="profile-main-content">
+            <div class="profile-header">
+                <h1>Cập Nhật Địa Chỉ</h1>
+                <form th:action="@{/profile/update-address}" th:object="${user}" method="post">
+                    <input type="hidden" th:field="*{username}" />
+                    <input type="hidden" th:field="*{email}" />
+                    <input type="hidden" th:field="*{phone}" />
+                    
+                    <!-- Địa chỉ cụ thể -->
+                    <div style="margin-bottom: 20px;">
+                        <label for="addressLine" style="display: block; font-weight: 600; margin-bottom: 5px;">Địa chỉ cụ thể</label>
+                        <textarea id="addressLine" th:field="*{addressLine}" 
+                                  placeholder="Số nhà, tên đường, tòa nhà..." 
+                                  style="width: 100%; padding: 10px; border: 1px solid #e1e4e8; border-radius: 6px; min-height: 100px; resize: vertical;"></textarea>
+                    </div>
+        
+                    <!-- Tỉnh/Thành phố -->
+                    <div style="margin-bottom: 20px;">
+                        <label for="city" style="display: block; font-weight: 600; margin-bottom: 5px;">Tỉnh/Thành phố</label>
+                        <select id="city" th:field="*{city}" 
+                                style="width: 100%; padding: 10px; border: 1px solid #e1e4e8; border-radius: 6px; background-color: white;"
+                                th:attr="data-current=*{city}">
+                            <option value="">Chọn tỉnh/thành phố</option>
+                        </select>
+                    </div>
+        
+                    <!-- Quận/Huyện -->
+                    <div style="margin-bottom: 20px;">
+                        <label for="district" style="display: block; font-weight: 600; margin-bottom: 5px;">Quận/Huyện</label>
+                        <select id="district" th:field="*{district}" 
+                                style="width: 100%; padding: 10px; border: 1px solid #e1e4e8; border-radius: 6px; background-color: white;"
+                                th:attr="data-current=*{district}">
+                            <option value="">Chọn quận/huyện</option>
+                        </select>
+                    </div>
+        
+                    <!-- Phường/Xã -->
+                    <div style="margin-bottom: 20px;">
+                        <label for="ward" style="display: block; font-weight: 600; margin-bottom: 5px;">Phường/Xã</label>
+                        <select id="ward" th:field="*{ward}" 
+                                style="width: 100%; padding: 10px; border: 1px solid #e1e4e8; border-radius: 6px; background-color: white;"
+                                th:attr="data-current=*{ward}">
+                            <option value="">Chọn phường/xã</option>
+                        </select>
+                    </div>
+        
+                    <button type="submit" class="profile-btn-primary">Cập nhật</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Script để xử lý dropdown -->
+        <script>
+            // Lấy các phần tử dropdown
+            const cityDropdown = document.getElementById('city');
+            const districtDropdown = document.getElementById('district');
+            const wardDropdown = document.getElementById('ward');
+
+            // Lấy giá trị hiện tại từ server
+            const currentCity = cityDropdown.getAttribute('data-current') || '';
+            const currentDistrict = districtDropdown.getAttribute('data-current') || '';
+            const currentWard = wardDropdown.getAttribute('data-current') || '';
+
+            // Hàm populate dropdown
+            function populateDropdown(dropdown, data, currentValue) {
+                dropdown.innerHTML = '<option value="">Chọn...</option>';
+                data.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.name;
+                    option.textContent = item.name;
+                    if (item.name === currentValue) option.selected = true;
+                    dropdown.appendChild(option);
+                });
+            }
+
+            // Hàm reset dropdown
+            function resetDropdown(dropdown) {
+                dropdown.innerHTML = '<option value="">Chọn...</option>';
+            }
+
+            // Lưu trữ dữ liệu
+            let provincesData = [];
+            let districtsData = [];
+
+            // Load tỉnh/thành phố
+            async function loadProvinces() {
+                try {
+                    const response = await fetch('https://provinces.open-api.vn/api/p/');
+                    provincesData = await response.json();
+                    populateDropdown(cityDropdown, provincesData, currentCity);
+                    if (currentCity) loadDistricts(currentCity);
+                } catch (error) {
+                    console.error('Error loading provinces:', error);
+                }
+            }
+
+            // Load quận/huyện dựa trên tỉnh/thành phố
+            async function loadDistricts(cityName) {
+                const province = provincesData.find(p => p.name === cityName);
+                if (!province) {
+                    resetDropdown(districtDropdown);
+                    resetDropdown(wardDropdown);
+                    return;
+                }
+                try {
+                    const response = await fetch(`https://provinces.open-api.vn/api/p/${province.code}?depth=2`);
+                    const data = await response.json();
+                    districtsData = data.districts;
+                    populateDropdown(districtDropdown, districtsData, currentDistrict);
+                    if (currentDistrict) loadWards(currentDistrict);
+                } catch (error) {
+                    console.error('Error loading districts:', error);
+                }
+            }
+
+            // Load phường/xã dựa trên quận/huyện
+            async function loadWards(districtName) {
+                const district = districtsData.find(d => d.name === districtName);
+                if (!district) {
+                    resetDropdown(wardDropdown);
+                    return;
+                }
+                try {
+                    const response = await fetch(`https://provinces.open-api.vn/api/d/${district.code}?depth=2`);
+                    const data = await response.json();
+                    populateDropdown(wardDropdown, data.wards, currentWard);
+                } catch (error) {
+                    console.error('Error loading wards:', error);
+                }
+            }
+
+            // Xử lý sự kiện thay đổi
+            cityDropdown.addEventListener('change', function() {
+                loadDistricts(this.value);
+                resetDropdown(wardDropdown); // Reset phường/xã khi thay đổi tỉnh
+            });
+
+            districtDropdown.addEventListener('change', function() {
+                loadWards(this.value);
+            });
+
+            // Khởi tạo
+            loadProvinces();
+        </script>
+    </main>
+</body>
+</html>

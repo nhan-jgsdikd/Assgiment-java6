@@ -52,7 +52,31 @@ public class Orders {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<OrderDetail> orderDetails;
 
+    // Thêm mối quan hệ với Voucher
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "voucher_id")
+    private Voucher voucher;
+
     public enum OrderStatus {
-        PREPARING, SHIPPING, DELIVERED
+        PREPARING, SHIPPING, DELIVERED, CANCELLED
+    }
+
+    // Phương thức tính tổng tiền sau khi áp dụng voucher
+    public Double getFinalAmount() {
+        if (voucher == null) {
+            return totalAmount;
+        }
+
+        Double discount = 0.0;
+        if (voucher.getIsPercentage()) {
+            discount = totalAmount * (voucher.getDiscountValue() / 100);
+            if (voucher.getMaxDiscount() != null && discount > voucher.getMaxDiscount()) {
+                discount = voucher.getMaxDiscount();
+            }
+        } else {
+            discount = voucher.getDiscountValue();
+        }
+
+        return totalAmount - discount < 0 ? 0 : totalAmount - discount;
     }
 }
