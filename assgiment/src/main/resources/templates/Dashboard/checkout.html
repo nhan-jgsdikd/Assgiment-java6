@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
+<<<<<<< HEAD
       .content {
         max-width: 1200px;
         margin: 40px auto;
@@ -262,9 +263,50 @@
           width: 35px;
           height: 35px;
         }
+=======
+      .content { max-width: 1200px; margin: 20px auto; padding: 20px; }
+      h1 { font-size: 2rem; color: #333; margin-bottom: 20px; }
+      .checkout-details { display: flex; justify-content: space-between; gap: 20px; }
+      .cart-summary, .shipping-form { width: 48%; }
+      .payment-methods { margin-bottom: 20px; }
+      .payment-option { 
+        border: 1px solid #ddd; 
+        padding: 15px; 
+        margin-bottom: 10px; 
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
       }
+      .payment-option:hover { border-color: #007bff; }
+      .payment-option.active { 
+        border-color: #007bff;
+        background-color: #f8f9fa;
+      }
+      .payment-icon { 
+        width: 40px; 
+        vertical-align: middle;
+        margin-right: 10px;
+      }
+      .item { border-bottom: 1px solid #ddd; padding: 10px 0; }
+      .total-row { font-weight: bold; margin-top: 10px; }
+      .shipping-form label { display: block; margin: 10px 0 5px; }
+      .shipping-form input { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; }
+      .checkout-btn { 
+        background-color: #28a745; 
+        color: #fff; 
+        padding: 12px 24px; 
+        border: none; 
+        border-radius: 5px; 
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+>>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
+      }
+      .checkout-btn:hover { background-color: #218838; }
+      .payment-description { margin-top: 10px; color: #666; }
     </style>
 
+<<<<<<< HEAD
     <h1>Thanh Toán Đơn Hàng</h1>
     
     <div class="checkout-container">
@@ -305,10 +347,49 @@
               <div class="payment-description">
                 Thanh toán tiền mặt khi nhận hàng
               </div>
+=======
+    <h1>Xác nhận thanh toán</h1>
+    <div class="checkout-details">
+      <!-- Tóm tắt giỏ hàng -->
+      <div class="cart-summary">
+        <h2>Sản phẩm trong giỏ hàng</h2>
+        <div class="item" th:each="item : ${cartItems}">
+          <p th:text="${item.product.nameProduct + ' (' + item.quantity + ' x ' + #numbers.formatDecimal(item.price, 0, 'COMMA', 2, 'POINT') + 'đ)'}"></p>
+          <p>Tổng: <span th:text="${#numbers.formatDecimal(item.subTotal, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span></p>
+        </div>
+        <div class="total-row">
+          <p>Tổng tiền hàng: <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span></p>
+          <p>Giảm giá: <span th:text="${#numbers.formatDecimal(totalDiscount, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span></p>
+          <p>Tổng thanh toán: <span th:text="${#numbers.formatDecimal(totalPayment, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span></p>
+        </div>
+      </div>
+
+      <!-- Form thanh toán -->
+      <div class="shipping-form">
+        <h2>Phương thức thanh toán</h2>
+        
+        <div class="payment-methods">
+          <div class="payment-option" onclick="selectPayment('zalopay')" id="zalopayOption">
+            <input type="radio" name="paymentMethod" id="zalopay" value="zalopay" hidden required>
+            <img src="/images/zalopay-icon.png" class="payment-icon" alt="ZaloPay">
+            <label for="zalopay">Thanh toán bằng ZaloPay</label>
+            <div class="payment-description">
+              Thanh toán nhanh chóng và an toàn qua ví điện tử ZaloPay
+            </div>
+          </div>
+
+          <div class="payment-option" onclick="selectPayment('cod')" id="codOption">
+            <input type="radio" name="paymentMethod" id="cod" value="cod" hidden>
+            <img src="/images/cod-icon.png" class="payment-icon" alt="COD">
+            <label for="cod">Thanh toán khi nhận hàng (COD)</label>
+            <div class="payment-description">
+              Thanh toán bằng tiền mặt khi nhận được hàng
+>>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
             </div>
           </div>
         </div>
 
+<<<<<<< HEAD
         <h2 style="margin-top: 25px;"><i class="fa-solid fa-truck-fast"></i> Thông Tin Giao Hàng</h2>
         <form th:action="@{/confirm-checkout}" method="post" id="checkoutForm">
           <input type="hidden" name="paymentMethod" id="selectedPaymentMethod" value="cod">
@@ -344,12 +425,33 @@
           <button type="submit" class="checkout-btn" id="submitButton">
             <i class="fa-solid fa-spinner"></i>
             <span id="btnText">Xác Nhận Đặt Hàng</span>
+=======
+        <h2>Thông tin giao hàng</h2>
+        <form th:action="@{/confirm-checkout}" method="post" id="checkoutForm">
+          <input type="hidden" name="paymentMethod" id="selectedPaymentMethod">
+          
+          <label for="shippingAddressLine">Địa chỉ:</label>
+          <input type="text" id="shippingAddressLine" name="shippingAddressLine" th:value="${user.addressLine}" required>
+          
+          <label for="shippingWard">Phường/Xã:</label>
+          <input type="text" id="shippingWard" name="shippingWard" th:value="${user.ward}" required>
+          
+          <label for="shippingDistrict">Quận/Huyện:</label>
+          <input type="text" id="shippingDistrict" name="shippingDistrict" th:value="${user.district}" required>
+          
+          <label for="shippingCity">Tỉnh/Thành phố:</label>
+          <input type="text" id="shippingCity" name="shippingCity" th:value="${user.city}" required>
+          
+          <button type="submit" class="checkout-btn" id="submitButton">
+            Hoàn tất đặt hàng
+>>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
           </button>
         </form>
       </div>
     </div>
 
     <script>
+<<<<<<< HEAD
       let selectedPayment = 'cod'; // Default payment method
 
       // Payment method selection
@@ -490,6 +592,34 @@
 
       // Initial validation
       validateForm();
+=======
+      function selectPayment(method) {
+        const zalopayOption = document.getElementById('zalopayOption');
+        const codOption = document.getElementById('codOption');
+        const submitButton = document.getElementById('submitButton');
+        
+        zalopayOption.classList.remove('active');
+        codOption.classList.remove('active');
+        
+        document.getElementById('selectedPaymentMethod').value = method;
+        
+        if(method === 'zalopay') {
+          zalopayOption.classList.add('active');
+          submitButton.textContent = 'Thanh toán với ZaloPay';
+        } else {
+          codOption.classList.add('active');
+          submitButton.textContent = 'Xác nhận đơn hàng';
+        }
+      }
+
+      document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+        const paymentMethod = document.getElementById('selectedPaymentMethod').value;
+        if(!paymentMethod) {
+          e.preventDefault();
+          alert('Vui lòng chọn phương thức thanh toán');
+        }
+      });
+>>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
     </script>
   </main>
 </body>

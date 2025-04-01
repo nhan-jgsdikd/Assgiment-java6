@@ -187,38 +187,65 @@ public class CartController {
         return "Dashboard/checkout";
     }
 
+<<<<<<< HEAD
+=======
+    // Xác nhận thanh toán từ phía người dùng (xóa đơn hàng khỏi giỏ hàng, giữ PREPARING chờ admin duyệt)
+>>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
     @PostMapping("/confirm-checkout")
     public String confirmCheckout(
             @RequestParam("shippingAddressLine") String shippingAddressLine,
             @RequestParam("shippingWard") String shippingWard,
             @RequestParam("shippingDistrict") String shippingDistrict,
             @RequestParam("shippingCity") String shippingCity,
+<<<<<<< HEAD
             @RequestParam("paymentMethod") String paymentMethod,
+=======
+>>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
             Model model,
             RedirectAttributes redirectAttributes) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         if (loggedInUser == null) {
             return "redirect:/login";
         }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
         Optional<Orders> cartOrderOpt = ordersDAO.findByUserAndStatusAndIsDeleted(loggedInUser, OrderStatus.PREPARING, false);
         if (!cartOrderOpt.isPresent() || orderDetailDAO.findByOrderAndIsDeleted(cartOrderOpt.get(), false).isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Giỏ hàng trống!");
             return "redirect:/cart";
         }
+<<<<<<< HEAD
     
         Orders cartOrder = cartOrderOpt.get();
+=======
+
+        Orders cartOrder = cartOrderOpt.get();
+        // Cập nhật thông tin giao hàng
+>>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
         cartOrder.setOrderDate(LocalDateTime.now());
         cartOrder.setShippingAddressLine(shippingAddressLine);
         cartOrder.setShippingWard(shippingWard);
         cartOrder.setShippingDistrict(shippingDistrict);
         cartOrder.setShippingCity(shippingCity);
+<<<<<<< HEAD
         cartOrder.setPaymentMethod(paymentMethod);
         ordersDAO.save(cartOrder);
     
         cartOrder.setIsDeleted(true);
         ordersDAO.save(cartOrder);
     
+=======
+        // Không thay đổi trạng thái, vẫn giữ PREPARING
+        ordersDAO.save(cartOrder);
+
+        // Xóa đơn hàng khỏi giỏ hàng (đánh dấu isDeleted = true)
+        cartOrder.setIsDeleted(true);
+        ordersDAO.save(cartOrder);
+
+>>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
         model.addAttribute("message", "Đơn hàng của bạn đã được gửi, đang chờ admin duyệt!");
         return "Dashboard/checkout-success";
     }
