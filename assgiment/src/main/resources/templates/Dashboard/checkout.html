@@ -3,310 +3,8 @@
 <body>
   <main class="content">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/Cart.css">
 
-    <style>
-<<<<<<< HEAD
-      .content {
-        max-width: 1200px;
-        margin: 40px auto;
-        padding: 0 20px;
-        font-family: 'Poppins', sans-serif;
-      }
-
-      h1 {
-        font-size: 2rem;
-        color: #2c3e50;
-        text-align: center;
-        margin-bottom: 40px;
-        font-weight: 600;
-        letter-spacing: 1px;
-        position: relative;
-        padding-bottom: 15px;
-      }
-
-      h1:after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 60px;
-        height: 3px;
-        background: #3498db;
-      }
-
-      .checkout-container {
-        display: grid;
-        grid-template-columns: 1fr 1.2fr;
-        gap: 30px;
-      }
-
-      .cart-summary {
-        background: #ffffff;
-        padding: 25px;
-        border-radius: 15px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-      }
-
-      .shipping-form {
-        background: #ffffff;
-        padding: 25px;
-        border-radius: 15px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-      }
-
-      h2 {
-        font-size: 1.4rem;
-        color: #2c3e50;
-        margin-bottom: 25px;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      h2 i {
-        color: #3498db;
-        font-size: 1.2em;
-      }
-
-      .item {
-        display: flex;
-        justify-content: space-between;
-        padding: 15px 0;
-        border-bottom: 1px dashed #e0e0e0;
-        font-size: 15px;
-        color: #555;
-        transition: transform 0.2s ease;
-      }
-
-      .item:hover {
-        transform: translateX(5px);
-      }
-
-      .total-row {
-        padding: 20px 0;
-        font-weight: 600;
-        color: #2c3e50;
-        background: #ffffff;
-        border-radius: 8px;
-        margin-top: 15px;
-      }
-
-      .total-row p {
-        display: flex;
-        justify-content: space-between;
-        margin: 12px 0;
-        font-size: 16px;
-        padding: 8px 15px;
-        background: #f8f9fa;
-        border-radius: 6px;
-      }
-
-      .total-row p:last-child {
-        color: #e74c3c;
-        font-size: 18px;
-        background: #fff5f5;
-      }
-
-      .payment-methods {
-        margin: 25px 0;
-      }
-
-      .payment-option {
-        display: flex;
-        align-items: center;
-        padding: 18px;
-        margin-bottom: 15px;
-        border-radius: 12px;
-        background: #f7f9fc;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        border: 2px solid transparent;
-        position: relative;
-      }
-
-      .payment-option.active {
-        border-color: #3498db;
-        background: #f0f8ff;
-      }
-
-      .payment-option.active:after {
-        content: "\f058"; /* Font Awesome check-circle */
-        font-family: "Font Awesome 6 Free";
-        font-weight: 900;
-        position: absolute;
-        right: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #3498db;
-        font-size: 1.4em;
-      }
-
-      .payment-icon {
-        width: 45px;
-        height: 45px;
-        margin-right: 15px;
-        object-fit: contain;
-        border-radius: 8px;
-        padding: 5px;
-        background: #fff;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      }
-
-      .payment-description {
-        font-size: 13px;
-        color: #7f8c8d;
-        margin-left: 10px;
-        line-height: 1.4;
-      }
-
-      .form-group {
-        position: relative;
-        margin-bottom: 25px;
-      }
-
-      .form-group i {
-        position: absolute;
-        left: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #7f8c8d;
-        font-size: 16px;
-      }
-
-      .shipping-form input {
-        width: 100%;
-        padding: 12px 12px 12px 40px;
-        border: 2px solid #e0e0e0;
-        background: #f7f9fc;
-        border-radius: 8px;
-        font-size: 15px;
-        transition: all 0.3s ease;
-      }
-
-      .shipping-form input:focus {
-        border-color: #3498db;
-        background: #fff;
-        box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
-      }
-
-      .checkout-btn {
-        background: #3498db;
-        color: white;
-        padding: 15px;
-        border: none;
-        border-radius: 10px;
-        width: 100%;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        margin-top: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-      }
-
-      .checkout-btn:hover {
-        background: #2980b9;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(52,152,219,0.3);
-      }
-
-      .checkout-btn:disabled {
-        background: #bdc3c7;
-        cursor: not-allowed;
-        transform: none;
-        box-shadow: none;
-      }
-
-      .checkout-btn i {
-        animation: spin 1s linear infinite;
-        display: none;
-      }
-
-      @keyframes spin {
-        100% { transform: rotate(360deg); }
-      }
-
-      .error-message {
-        color: #e74c3c;
-        font-size: 12px;
-        margin-top: 5px;
-        display: none;
-      }
-
-      @media (max-width: 992px) {
-        .checkout-container {
-          grid-template-columns: 1fr;
-          gap: 20px;
-        }
-        
-        .cart-summary {
-          order: 2;
-        }
-      }
-
-      @media (max-width: 768px) {
-        .content {
-          margin: 20px auto;
-          padding: 0 15px;
-        }
-        
-        .payment-option {
-          padding: 15px;
-        }
-        
-        .payment-icon {
-          width: 35px;
-          height: 35px;
-        }
-=======
-      .content { max-width: 1200px; margin: 20px auto; padding: 20px; }
-      h1 { font-size: 2rem; color: #333; margin-bottom: 20px; }
-      .checkout-details { display: flex; justify-content: space-between; gap: 20px; }
-      .cart-summary, .shipping-form { width: 48%; }
-      .payment-methods { margin-bottom: 20px; }
-      .payment-option { 
-        border: 1px solid #ddd; 
-        padding: 15px; 
-        margin-bottom: 10px; 
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-      }
-      .payment-option:hover { border-color: #007bff; }
-      .payment-option.active { 
-        border-color: #007bff;
-        background-color: #f8f9fa;
-      }
-      .payment-icon { 
-        width: 40px; 
-        vertical-align: middle;
-        margin-right: 10px;
-      }
-      .item { border-bottom: 1px solid #ddd; padding: 10px 0; }
-      .total-row { font-weight: bold; margin-top: 10px; }
-      .shipping-form label { display: block; margin: 10px 0 5px; }
-      .shipping-form input { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; }
-      .checkout-btn { 
-        background-color: #28a745; 
-        color: #fff; 
-        padding: 12px 24px; 
-        border: none; 
-        border-radius: 5px; 
-        cursor: pointer;
-        width: 100%;
-        font-size: 16px;
->>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
-      }
-      .checkout-btn:hover { background-color: #218838; }
-      .payment-description { margin-top: 10px; color: #666; }
-    </style>
-
-<<<<<<< HEAD
     <h1>Thanh Toán Đơn Hàng</h1>
     
     <div class="checkout-container">
@@ -317,10 +15,18 @@
           <span th:text="${item.product.nameProduct + ' (' + item.quantity + ' x ' + #numbers.formatDecimal(item.price, 0, 'COMMA', 2, 'POINT') + 'đ)'}"></span>
           <span th:text="${#numbers.formatDecimal(item.price * item.quantity, 0, 'COMMA', 2, 'POINT') + 'đ'}"></span>
         </div>
+
+        <!-- Nút mở modal chọn voucher -->
+        <div class="voucher-section">
+          <h3>Voucher</h3>
+          <button class="voucher-btn" onclick="openVoucherModal()">Chọn Voucher</button>
+        </div>
+        <div class="voucher-message" id="voucherMessage"></div>
+
         <div class="total-row">
           <p>Tổng tiền hàng: <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 2, 'POINT') + 'đ'}"></span></p>
-          <p>Giảm giá: <span th:text="${#numbers.formatDecimal(totalDiscount, 0, 'COMMA', 2, 'POINT') + 'đ'}"></span></p>
-          <p>Tổng thanh toán: <span th:text="${#numbers.formatDecimal(totalPayment, 0, 'COMMA', 2, 'POINT') + 'đ'}"></span></p>
+          <p>Giảm giá (Voucher): <span id="voucherDiscount" th:text="${#numbers.formatDecimal(voucherDiscount ?: 0, 0, 'COMMA', 2, 'POINT') + 'đ'}"></span></p>
+          <p>Tổng thanh toán: <span id="finalPayment" th:text="${#numbers.formatDecimal(totalPayment - (voucherDiscount ?: 0), 0, 'COMMA', 2, 'POINT') + 'đ'}"></span></p>
         </div>
       </div>
 
@@ -333,9 +39,7 @@
             <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-ZaloPay-Square.png" class="payment-icon" alt="ZaloPay">
             <div>
               <label for="zalopay">Thanh toán bằng ZaloPay</label>
-              <div class="payment-description">
-                Thanh toán nhanh chóng qua ví ZaloPay
-              </div>
+              <div class="payment-description">Thanh toán nhanh chóng qua ví ZaloPay</div>
             </div>
           </div>
         
@@ -344,55 +48,15 @@
             <img src="https://cdn0.iconfinder.com/data/icons/business-and-finance-outline-icons/50/Business-icons-06-512.png" class="payment-icon" alt="COD">
             <div>
               <label for="cod">Thanh toán khi nhận hàng</label>
-              <div class="payment-description">
-                Thanh toán tiền mặt khi nhận hàng
-              </div>
-=======
-    <h1>Xác nhận thanh toán</h1>
-    <div class="checkout-details">
-      <!-- Tóm tắt giỏ hàng -->
-      <div class="cart-summary">
-        <h2>Sản phẩm trong giỏ hàng</h2>
-        <div class="item" th:each="item : ${cartItems}">
-          <p th:text="${item.product.nameProduct + ' (' + item.quantity + ' x ' + #numbers.formatDecimal(item.price, 0, 'COMMA', 2, 'POINT') + 'đ)'}"></p>
-          <p>Tổng: <span th:text="${#numbers.formatDecimal(item.subTotal, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span></p>
-        </div>
-        <div class="total-row">
-          <p>Tổng tiền hàng: <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span></p>
-          <p>Giảm giá: <span th:text="${#numbers.formatDecimal(totalDiscount, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span></p>
-          <p>Tổng thanh toán: <span th:text="${#numbers.formatDecimal(totalPayment, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span></p>
-        </div>
-      </div>
-
-      <!-- Form thanh toán -->
-      <div class="shipping-form">
-        <h2>Phương thức thanh toán</h2>
-        
-        <div class="payment-methods">
-          <div class="payment-option" onclick="selectPayment('zalopay')" id="zalopayOption">
-            <input type="radio" name="paymentMethod" id="zalopay" value="zalopay" hidden required>
-            <img src="/images/zalopay-icon.png" class="payment-icon" alt="ZaloPay">
-            <label for="zalopay">Thanh toán bằng ZaloPay</label>
-            <div class="payment-description">
-              Thanh toán nhanh chóng và an toàn qua ví điện tử ZaloPay
-            </div>
-          </div>
-
-          <div class="payment-option" onclick="selectPayment('cod')" id="codOption">
-            <input type="radio" name="paymentMethod" id="cod" value="cod" hidden>
-            <img src="/images/cod-icon.png" class="payment-icon" alt="COD">
-            <label for="cod">Thanh toán khi nhận hàng (COD)</label>
-            <div class="payment-description">
-              Thanh toán bằng tiền mặt khi nhận được hàng
->>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
+              <div class="payment-description">Thanh toán tiền mặt khi nhận hàng</div>
             </div>
           </div>
         </div>
 
-<<<<<<< HEAD
         <h2 style="margin-top: 25px;"><i class="fa-solid fa-truck-fast"></i> Thông Tin Giao Hàng</h2>
         <form th:action="@{/confirm-checkout}" method="post" id="checkoutForm">
           <input type="hidden" name="paymentMethod" id="selectedPaymentMethod" value="cod">
+          <input type="hidden" name="voucherCode" id="appliedVoucherCode" value="">
           
           <div class="form-group">
             <i class="fa-solid fa-house"></i>
@@ -425,34 +89,51 @@
           <button type="submit" class="checkout-btn" id="submitButton">
             <i class="fa-solid fa-spinner"></i>
             <span id="btnText">Xác Nhận Đặt Hàng</span>
-=======
-        <h2>Thông tin giao hàng</h2>
-        <form th:action="@{/confirm-checkout}" method="post" id="checkoutForm">
-          <input type="hidden" name="paymentMethod" id="selectedPaymentMethod">
-          
-          <label for="shippingAddressLine">Địa chỉ:</label>
-          <input type="text" id="shippingAddressLine" name="shippingAddressLine" th:value="${user.addressLine}" required>
-          
-          <label for="shippingWard">Phường/Xã:</label>
-          <input type="text" id="shippingWard" name="shippingWard" th:value="${user.ward}" required>
-          
-          <label for="shippingDistrict">Quận/Huyện:</label>
-          <input type="text" id="shippingDistrict" name="shippingDistrict" th:value="${user.district}" required>
-          
-          <label for="shippingCity">Tỉnh/Thành phố:</label>
-          <input type="text" id="shippingCity" name="shippingCity" th:value="${user.city}" required>
-          
-          <button type="submit" class="checkout-btn" id="submitButton">
-            Hoàn tất đặt hàng
->>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
           </button>
         </form>
       </div>
     </div>
 
+    <!-- Modal hiển thị danh sách voucher -->
+    <div class="modal" id="voucherModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Chọn Voucher</h3>
+          <span class="close-modal" onclick="closeVoucherModal()">×</span>
+        </div>
+        <div class="voucher-list">
+          <div class="voucher-option" th:each="voucher : ${availableVouchers}" 
+               th:data-voucher-code="${voucher.code}" 
+               th:id="'voucher-' + ${voucher.code}" 
+               onclick="selectVoucher(this.getAttribute('data-voucher-code'))">
+            <input type="radio" name="voucher" th:id="'voucherRadio-' + ${voucher.code}" 
+                   th:value="${voucher.code}" hidden>
+            <label th:for="'voucherRadio-' + ${voucher.code}" 
+                   th:text="${voucher.code + ' - Giảm ' + (voucher.isPercentage ? voucher.discountValue + '%' : #numbers.formatDecimal(voucher.discountValue, 0, 'COMMA', 2, 'POINT') + 'đ')}"></label>
+            <div class="voucher-details">
+              <span th:text="'Đơn tối thiểu: ' + ${#numbers.formatDecimal(voucher.minOrderValue, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span><br>
+              <span th:if="${voucher.maxDiscount != null}" 
+                    th:text="'Giảm tối đa: ' + ${#numbers.formatDecimal(voucher.maxDiscount, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span>
+              <span th:unless="${voucher.maxDiscount != null}" th:text="'Không giới hạn giảm tối đa'"></span>
+            </div>
+          </div>
+          <div class="voucher-option" th:data-voucher-code="''" id="voucher-none" 
+               onclick="selectVoucher(this.getAttribute('data-voucher-code'))">
+            <input type="radio" name="voucher" id="voucherRadio-none" value="" hidden checked>
+            <label for="voucherRadio-none">Không sử dụng voucher</label>
+            <div class="voucher-details">Không áp dụng giảm giá</div>
+          </div>
+        </div>
+        <button onclick="applyVoucher()" style="margin-top: 15px; width: 100%;">Áp dụng Voucher</button>
+      </div>
+    </div>
+
     <script>
-<<<<<<< HEAD
       let selectedPayment = 'cod'; // Default payment method
+      let appliedVoucherDiscount = /*[[${voucherDiscount ?: 0}]]*/ 0; // Giá trị giảm giá từ server
+      let totalPrice = /*[[${totalPrice}]]*/ 0; // Tổng tiền hàng từ Thymeleaf
+      let totalPayment = totalPrice - appliedVoucherDiscount; // Tổng thanh toán ban đầu
+      let selectedVoucher = ''; // Voucher được chọn
 
       // Payment method selection
       function selectPayment(method) {
@@ -469,6 +150,89 @@
         validateForm();
       }
 
+      // Mở modal voucher
+      function openVoucherModal() {
+        document.getElementById('voucherModal').style.display = 'flex';
+      }
+
+      // Đóng modal voucher
+      function closeVoucherModal() {
+        document.getElementById('voucherModal').style.display = 'none';
+      }
+
+      // Chọn voucher
+      function selectVoucher(voucherCode) {
+        const voucherOptions = document.querySelectorAll('.voucher-option');
+        voucherOptions.forEach(option => option.classList.remove('active'));
+        
+        const selectedOption = document.getElementById(`voucher-${voucherCode || 'none'}`);
+        selectedOption.classList.add('active');
+        
+        document.getElementById(`voucherRadio-${voucherCode || 'none'}`).checked = true;
+        selectedVoucher = voucherCode;
+      }
+
+      // Áp dụng voucher
+      function applyVoucher() {
+        const voucherMessage = document.getElementById('voucherMessage');
+        const voucherDiscountElement = document.getElementById('voucherDiscount');
+        const finalPaymentElement = document.getElementById('finalPayment');
+
+        if (!selectedVoucher) {
+          appliedVoucherDiscount = 0;
+          totalPayment = totalPrice;
+          voucherDiscountElement.textContent = '0đ';
+          finalPaymentElement.textContent = new Intl.NumberFormat('vi-VN', { style: 'decimal', minimumFractionDigits: 2 }).format(totalPayment) + 'đ';
+          document.getElementById('appliedVoucherCode').value = '';
+          voucherMessage.textContent = 'Không sử dụng voucher.';
+          voucherMessage.className = 'voucher-message success';
+          voucherMessage.style.display = 'block';
+          closeVoucherModal();
+          return;
+        }
+
+        fetch('/apply-voucher', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ voucherCode: selectedVoucher, totalPrice: totalPrice })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            appliedVoucherDiscount = data.discount;
+            totalPayment = data.totalPayment;
+
+            voucherDiscountElement.textContent = new Intl.NumberFormat('vi-VN', { style: 'decimal', minimumFractionDigits: 2 }).format(appliedVoucherDiscount) + 'đ';
+            finalPaymentElement.textContent = new Intl.NumberFormat('vi-VN', { style: 'decimal', minimumFractionDigits: 2 }).format(totalPayment) + 'đ';
+            
+            document.getElementById('appliedVoucherCode').value = selectedVoucher;
+            
+            voucherMessage.textContent = data.message || 'Áp dụng voucher thành công!';
+            voucherMessage.className = 'voucher-message success';
+          } else {
+            appliedVoucherDiscount = 0;
+            totalPayment = totalPrice;
+            voucherDiscountElement.textContent = '0đ';
+            finalPaymentElement.textContent = new Intl.NumberFormat('vi-VN', { style: 'decimal', minimumFractionDigits: 2 }).format(totalPayment) + 'đ';
+            document.getElementById('appliedVoucherCode').value = '';
+            
+            voucherMessage.textContent = data.message || 'Mã voucher không hợp lệ!';
+            voucherMessage.className = 'voucher-message error';
+          }
+          voucherMessage.style.display = 'block';
+          closeVoucherModal();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          voucherMessage.textContent = 'Đã xảy ra lỗi khi áp dụng voucher!';
+          voucherMessage.className = 'voucher-message error';
+          voucherMessage.style.display = 'block';
+          closeVoucherModal();
+        });
+      }
+
       // Form validation
       function validateForm() {
         const address = document.getElementById('shippingAddressLine').value.trim();
@@ -483,46 +247,19 @@
         
         let isValid = true;
 
-        if (!address) {
-          addressError.style.display = 'block';
-          isValid = false;
-        } else {
-          addressError.style.display = 'none';
-        }
+        if (!address) { addressError.style.display = 'block'; isValid = false; } else { addressError.style.display = 'none'; }
+        if (!ward) { wardError.style.display = 'block'; isValid = false; } else { wardError.style.display = 'none'; }
+        if (!district) { districtError.style.display = 'block'; isValid = false; } else { districtError.style.display = 'none'; }
+        if (!city) { cityError.style.display = 'block'; isValid = false; } else { cityError.style.display = 'none'; }
 
-        if (!ward) {
-          wardError.style.display = 'block';
-          isValid = false;
-        } else {
-          wardError.style.display = 'none';
-        }
-
-        if (!district) {
-          districtError.style.display = 'block';
-          isValid = false;
-        } else {
-          districtError.style.display = 'none';
-        }
-
-        if (!city) {
-          cityError.style.display = 'block';
-          isValid = false;
-        } else {
-          cityError.style.display = 'none';
-        }
-
-        const submitButton = document.getElementById('submitButton');
-        submitButton.disabled = !isValid;
+        document.getElementById('submitButton').disabled = !isValid;
         return isValid;
       }
 
-      // Handle form submission based on payment method
+      // Handle form submission
       document.getElementById('checkoutForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // Prevent default form submission
-
-        if (!validateForm()) {
-          return;
-        }
+        e.preventDefault();
+        if (!validateForm()) return;
 
         const submitButton = document.getElementById('submitButton');
         const spinner = submitButton.querySelector('i');
@@ -535,7 +272,7 @@
         if (selectedPayment === 'zalopay') {
           handleZaloPayPayment();
         } else if (selectedPayment === 'cod') {
-          document.getElementById('checkoutForm').submit(); // Submit to /confirm-checkout
+          this.submit();
         }
       });
 
@@ -547,20 +284,19 @@
           shippingDistrict: document.getElementById('shippingDistrict').value,
           shippingCity: document.getElementById('shippingCity').value,
           paymentMethod: 'zalopay',
-          totalPayment: /* Pass totalPayment from Thymeleaf */ parseFloat(/*[[${totalPayment}]]*/ 0)
+          totalPayment: totalPayment,
+          voucherCode: document.getElementById('appliedVoucherCode').value
         };
 
         fetch('/zalopay-payment', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData)
         })
         .then(response => response.json())
         .then(data => {
           if (data.success && data.paymentUrl) {
-            window.location.href = data.paymentUrl; // Redirect to ZaloPay payment page
+            window.location.href = data.paymentUrl;
           } else {
             alert('Lỗi thanh toán ZaloPay: ' + (data.message || 'Không thể xử lý thanh toán'));
             resetButton();
@@ -586,40 +322,18 @@
 
       // Real-time input validation
       const inputs = document.querySelectorAll('.shipping-form input');
-      inputs.forEach(input => {
-        input.addEventListener('input', validateForm);
-      });
+      inputs.forEach(input => input.addEventListener('input', validateForm));
 
       // Initial validation
       validateForm();
-=======
-      function selectPayment(method) {
-        const zalopayOption = document.getElementById('zalopayOption');
-        const codOption = document.getElementById('codOption');
-        const submitButton = document.getElementById('submitButton');
-        
-        zalopayOption.classList.remove('active');
-        codOption.classList.remove('active');
-        
-        document.getElementById('selectedPaymentMethod').value = method;
-        
-        if(method === 'zalopay') {
-          zalopayOption.classList.add('active');
-          submitButton.textContent = 'Thanh toán với ZaloPay';
-        } else {
-          codOption.classList.add('active');
-          submitButton.textContent = 'Xác nhận đơn hàng';
-        }
-      }
 
-      document.getElementById('checkoutForm').addEventListener('submit', function(e) {
-        const paymentMethod = document.getElementById('selectedPaymentMethod').value;
-        if(!paymentMethod) {
-          e.preventDefault();
-          alert('Vui lòng chọn phương thức thanh toán');
+      // Đóng modal khi nhấp ra ngoài
+      window.onclick = function(event) {
+        const modal = document.getElementById('voucherModal');
+        if (event.target === modal) {
+          closeVoucherModal();
         }
-      });
->>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
+      };
     </script>
   </main>
 </body>

@@ -8,11 +8,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.stereotype.Service;
-<<<<<<< HEAD
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-=======
->>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
 
 import java6.assgiment.Config.ZalopayConfig;
 import java6.assgiment.Crypto.HMACUtil;
@@ -26,7 +23,6 @@ import java.util.logging.Logger;
 @Service
 public class ZalopayService {
 
-<<<<<<< HEAD
 
 
     @PostMapping("/zalotest")
@@ -35,8 +31,6 @@ public class ZalopayService {
     }
 
     
-=======
->>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
     private static final Logger logger = Logger.getLogger(ZalopayService.class.getName());
 
     private static String getCurrentTimeString(String format) {
@@ -72,7 +66,6 @@ public class ZalopayService {
         }
 
         Map<String, Object> order = new HashMap<>();
-<<<<<<< HEAD
         order.put("app_id", ZalopayConfig.config.get("appid"));
         order.put("app_trans_id", getCurrentTimeString("yyMMdd") + "_" + randomId);
         order.put("app_time", System.currentTimeMillis());
@@ -82,17 +75,6 @@ public class ZalopayService {
         order.put("bank_code", "");
         order.put("item", orderRequest.getOrDefault("items", "[{}]"));
         order.put("embed_data", orderRequest.getOrDefault("", "{}"));
-=======
-        order.put("app_id", ZalopayConfig.config.get("app_id"));
-        order.put("app_trans_id", getCurrentTimeString("yyMMdd") + "_" + randomId);
-        order.put("app_time", System.currentTimeMillis());
-        order.put("app_user", orderRequest.getOrDefault("app_user", "user123"));
-        order.put("amount", amount);
-        order.put("description", "SN Mobile - Payment for the order #" + randomId);
-        order.put("bank_code", "");
-        order.put("item", orderRequest.getOrDefault("items", "[{}]"));
-        order.put("embed_data", orderRequest.getOrDefault("embed_data", "{}"));
->>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
         order.put("callback_url", "http://localhost:8080/api/zalopay/callback"); // Thay bằng URL thực tế nếu deploy
 
         String data = order.get("app_id") + "|" + order.get("app_trans_id") + "|" + order.get("app_user") + "|"

@@ -49,7 +49,6 @@ public class Orders {
     @Column(name = "shipping_city", length = 255)
     private String shippingCity;
 
-    // Sửa từ OrderDetailDAO thành OrderDetail
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<OrderDetail> orderDetails;
 
@@ -60,7 +59,6 @@ public class Orders {
 
     public enum OrderStatus {
         PREPARING, SHIPPING, DELIVERED, CANCELLED
-<<<<<<< HEAD
     }
 
     // Phương thức tính tổng tiền sau khi áp dụng voucher
@@ -80,7 +78,5 @@ public class Orders {
         }
 
         return totalAmount - discount < 0 ? 0 : totalAmount - discount;
-=======
->>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
     }
 }

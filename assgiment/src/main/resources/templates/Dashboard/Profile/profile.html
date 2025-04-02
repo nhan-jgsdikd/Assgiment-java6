@@ -29,11 +29,7 @@
 
             <!-- Recent Orders -->
             <div class="profile-orders-section">
-<<<<<<< HEAD
                 <h2>Đơn Hàng Gần Đây</h2>
-=======
-                <h2>3 Đơn Hàng Gần Nhất</h2>
->>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
                 <div th:if="${not #lists.isEmpty(orders)}">
                     <div class="profile-order-item" th:each="order : ${orders}">
                         <p><strong>Mã đơn hàng:</strong> <span th:text="${order.id}"></span></p>

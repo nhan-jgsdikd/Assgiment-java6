@@ -69,5 +69,4 @@ public class User {
             throw new UnsupportedOperationException("Unimplemented method 'startsWith'");
         }
     }
-
 }

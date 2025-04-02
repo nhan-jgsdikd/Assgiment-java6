@@ -66,7 +66,6 @@ public class ProductController {
         return "Dashboard/Products";
     }
 
-<<<<<<< HEAD
     @GetMapping("/product/{id}")
     public String productDetail(@PathVariable("id") Long id, Model model) {
         // Tìm sản phẩm theo ID
@@ -83,7 +82,4 @@ public class ProductController {
         // Trả về tên view cho trang chi tiết sản phẩm
         return "Dashboard/ProductDetail";
     }
-=======
-
->>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
 }

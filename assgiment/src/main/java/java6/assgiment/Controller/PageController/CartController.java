@@ -2,12 +2,14 @@ package java6.assgiment.Controller.PageController;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,10 +24,12 @@ import jakarta.servlet.http.HttpSession;
 import java6.assgiment.DAO.OrderDAO;
 import java6.assgiment.DAO.OrderDetailDAO;
 import java6.assgiment.DAO.ProductDAO;
+import java6.assgiment.DAO.VoucherDAO;
 import java6.assgiment.Entity.OrderDetail;
 import java6.assgiment.Entity.Orders;
 import java6.assgiment.Entity.Product;
 import java6.assgiment.Entity.User;
+import java6.assgiment.Entity.Voucher;
 import java6.assgiment.Entity.Orders.OrderStatus;
 
 @Controller
@@ -42,6 +46,9 @@ public class CartController {
 
     @Autowired
     private OrderDetailDAO orderDetailDAO;
+
+    @Autowired
+    private VoucherDAO voucherDAO;
 
     // Hiển thị giỏ hàng từ database
     @GetMapping("/cart")
@@ -157,7 +164,6 @@ public class CartController {
         return "redirect:/cart";
     }
 
-    // Hiển thị trang checkout
     @GetMapping("/checkout")
     public String showCheckout(Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
@@ -176,77 +182,149 @@ public class CartController {
         double totalPrice = cartItems.stream()
             .mapToDouble(item -> item.getPrice().doubleValue() * item.getQuantity())
             .sum();
-        double totalDiscount = 0;
-        double totalPayment = totalPrice - totalDiscount;
+        double voucherDiscount = cartOrder.getVoucher() != null ? calculateVoucherDiscount(totalPrice, cartOrder.getVoucher()) : 0;
+        double totalPayment = totalPrice - voucherDiscount;
+
+        List<Voucher> availableVouchers = voucherDAO.findAll().stream()
+            .filter(v -> !v.getIsDeleted() &&
+                         LocalDateTime.now().isAfter(v.getStartDate()) &&
+                         LocalDateTime.now().isBefore(v.getEndDate()) &&
+                         v.getQuantity() > 0)
+            .collect(Collectors.toList());
 
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("totalPrice", totalPrice);
-        model.addAttribute("totalDiscount", totalDiscount);
+        model.addAttribute("voucherDiscount", voucherDiscount);
         model.addAttribute("totalPayment", totalPayment);
         model.addAttribute("user", loggedInUser);
+        model.addAttribute("availableVouchers", availableVouchers);
+
         return "Dashboard/checkout";
     }
 
-<<<<<<< HEAD
-=======
-    // Xác nhận thanh toán từ phía người dùng (xóa đơn hàng khỏi giỏ hàng, giữ PREPARING chờ admin duyệt)
->>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
+    @PostMapping("/apply-voucher")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> applyVoucher(@RequestBody Map<String, Object> request) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", "Vui lòng đăng nhập!"));
+        }
+
+        String voucherCode = (String) request.get("voucherCode");
+        Map<String, Object> response = new HashMap<>();
+
+        Optional<Orders> cartOrderOpt = ordersDAO.findByUserAndStatusAndIsDeleted(loggedInUser, OrderStatus.PREPARING, false);
+        if (!cartOrderOpt.isPresent()) {
+            response.put("success", false);
+            response.put("message", "Giỏ hàng không tồn tại!");
+            return ResponseEntity.ok(response);
+        }
+
+        Orders cartOrder = cartOrderOpt.get();
+        List<OrderDetail> cartItems = orderDetailDAO.findByOrderAndIsDeleted(cartOrder, false);
+        double totalPrice = cartItems.stream()
+            .mapToDouble(item -> item.getPrice().doubleValue() * item.getQuantity())
+            .sum();
+
+        if (voucherCode == null || voucherCode.isEmpty()) {
+            response.put("success", true);
+            response.put("discount", 0.0);
+            response.put("totalPayment", totalPrice);
+            response.put("message", "Không sử dụng voucher.");
+            return ResponseEntity.ok(response);
+        }
+
+        Optional<Voucher> voucherOpt = voucherDAO.findByCode(voucherCode);
+        if (!voucherOpt.isPresent() || voucherOpt.get().getIsDeleted() ||
+            LocalDateTime.now().isBefore(voucherOpt.get().getStartDate()) ||
+            LocalDateTime.now().isAfter(voucherOpt.get().getEndDate()) ||
+            voucherOpt.get().getQuantity() <= 0) {
+            response.put("success", false);
+            response.put("message", "Mã voucher không hợp lệ hoặc đã hết hạn!");
+            return ResponseEntity.ok(response);
+        }
+
+        Voucher voucher = voucherOpt.get();
+        double discount = calculateVoucherDiscount(totalPrice, voucher);
+        if (discount == 0 && totalPrice < voucher.getMinOrderValue()) {
+            response.put("success", false);
+            response.put("message", "Đơn hàng không đủ giá trị tối thiểu để áp dụng voucher!");
+            return ResponseEntity.ok(response);
+        }
+
+        double totalPayment = totalPrice - discount;
+
+        response.put("success", true);
+        response.put("discount", discount);
+        response.put("totalPayment", totalPayment);
+        response.put("message", "Áp dụng voucher thành công!");
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/confirm-checkout")
     public String confirmCheckout(
             @RequestParam("shippingAddressLine") String shippingAddressLine,
             @RequestParam("shippingWard") String shippingWard,
             @RequestParam("shippingDistrict") String shippingDistrict,
             @RequestParam("shippingCity") String shippingCity,
-<<<<<<< HEAD
             @RequestParam("paymentMethod") String paymentMethod,
-=======
->>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
+            @RequestParam(value = "voucherCode", required = false) String voucherCode,
             Model model,
             RedirectAttributes redirectAttributes) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         if (loggedInUser == null) {
             return "redirect:/login";
         }
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
         Optional<Orders> cartOrderOpt = ordersDAO.findByUserAndStatusAndIsDeleted(loggedInUser, OrderStatus.PREPARING, false);
         if (!cartOrderOpt.isPresent() || orderDetailDAO.findByOrderAndIsDeleted(cartOrderOpt.get(), false).isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Giỏ hàng trống!");
             return "redirect:/cart";
         }
-<<<<<<< HEAD
-    
-        Orders cartOrder = cartOrderOpt.get();
-=======
 
         Orders cartOrder = cartOrderOpt.get();
-        // Cập nhật thông tin giao hàng
->>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
+        List<OrderDetail> cartItems = orderDetailDAO.findByOrderAndIsDeleted(cartOrder, false);
+        double totalPrice = cartItems.stream()
+            .mapToDouble(item -> item.getPrice().doubleValue() * item.getQuantity())
+            .sum();
+        double voucherDiscount = 0;
+
+        if (voucherCode != null && !voucherCode.isEmpty()) {
+            Optional<Voucher> voucherOpt = voucherDAO.findByCode(voucherCode);
+            if (voucherOpt.isPresent() && !voucherOpt.get().getIsDeleted() &&
+                LocalDateTime.now().isAfter(voucherOpt.get().getStartDate()) &&
+                LocalDateTime.now().isBefore(voucherOpt.get().getEndDate()) &&
+                voucherOpt.get().getQuantity() > 0) {
+                Voucher voucher = voucherOpt.get();
+                voucherDiscount = calculateVoucherDiscount(totalPrice, voucher);
+                if (voucherDiscount == 0 && totalPrice < voucher.getMinOrderValue()) {
+                    redirectAttributes.addFlashAttribute("error", "Đơn hàng không đủ giá trị tối thiểu để áp dụng voucher!");
+                    return "redirect:/checkout";
+                }
+                cartOrder.setVoucher(voucher);
+                voucher.setQuantity(voucher.getQuantity() - 1);
+                voucherDAO.save(voucher);
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Mã voucher không hợp lệ hoặc đã hết hạn!");
+                return "redirect:/checkout";
+            }
+        }
+
+        double totalPayment = totalPrice - voucherDiscount;
+
         cartOrder.setOrderDate(LocalDateTime.now());
+        cartOrder.setTotalAmount(totalPayment);
         cartOrder.setShippingAddressLine(shippingAddressLine);
         cartOrder.setShippingWard(shippingWard);
         cartOrder.setShippingDistrict(shippingDistrict);
         cartOrder.setShippingCity(shippingCity);
-<<<<<<< HEAD
         cartOrder.setPaymentMethod(paymentMethod);
         ordersDAO.save(cartOrder);
-    
-        cartOrder.setIsDeleted(true);
-        ordersDAO.save(cartOrder);
-    
-=======
-        // Không thay đổi trạng thái, vẫn giữ PREPARING
-        ordersDAO.save(cartOrder);
 
-        // Xóa đơn hàng khỏi giỏ hàng (đánh dấu isDeleted = true)
         cartOrder.setIsDeleted(true);
         ordersDAO.save(cartOrder);
 
->>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
-        model.addAttribute("message", "Đơn hàng của bạn đã được gửi, đang chờ admin duyệt!");
+        model.addAttribute("message", "Đơn hàng của bạn đã được gửi, đang chờ giao hàng!");
         return "Dashboard/checkout-success";
     }
 
@@ -337,5 +415,32 @@ public class CartController {
             .sum();
         order.setTotalAmount(total);
         ordersDAO.save(order);
+    }
+
+    // Hàm tiện ích tính giảm giá voucher
+    private double calculateVoucherDiscount(double totalPrice, Voucher voucher) {
+        if (voucher == null || totalPrice < voucher.getMinOrderValue()) {
+            return 0; // Không áp dụng nếu không đủ điều kiện
+        }
+
+        double discount;
+        if (voucher.getIsPercentage()) {
+            discount = totalPrice * (voucher.getDiscountValue() / 100.0); // Tính phần trăm giảm giá
+            System.out.println("Calculated discount (percentage): " + discount); // Log để kiểm tra
+        } else {
+            discount = voucher.getDiscountValue(); // Số tiền cố định
+            System.out.println("Calculated discount (fixed): " + discount); // Log để kiểm tra
+        }
+
+        // Kiểm tra maxDiscount
+        Double maxDiscount = voucher.getMaxDiscount();
+        if (maxDiscount != null && discount > maxDiscount) {
+            discount = maxDiscount;
+            System.out.println("Discount limited to maxDiscount: " + discount); // Log để kiểm tra
+        } else {
+            System.out.println("No maxDiscount applied, final discount: " + discount); // Log để kiểm tra
+        }
+
+        return discount;
     }
 }

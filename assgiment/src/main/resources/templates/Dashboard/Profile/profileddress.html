@@ -2,13 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{/Navar/Layout :: view(~{::main})}">
 <body>
     <main class="profile-container">
-<<<<<<< HEAD
         <link rel="stylesheet" href="/css/profile.css">
-=======
-        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="/css/profile.css">
-
->>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
         <!-- Sidebar -->
         <div class="profile-sidebar">
             <ul>
@@ -27,7 +21,6 @@
                     <input type="hidden" th:field="*{username}" />
                     <input type="hidden" th:field="*{email}" />
                     <input type="hidden" th:field="*{phone}" />
-<<<<<<< HEAD
                     
                     <!-- Địa chỉ cụ thể -->
                     <div style="margin-bottom: 20px;">
@@ -165,36 +158,6 @@
             // Khởi tạo
             loadProvinces();
         </script>
-=======
-                    <div class="form-group">
-                        <label for="addressLine" class="block text-sm font-semibold text-gray-700">Địa chỉ</label>
-                        <textarea id="addressLine" th:field="*{addressLine}" 
-                                  placeholder="Nhập địa chỉ cụ thể" 
-                                  class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[100px]"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="ward" class="block text-sm font-semibold text-gray-700">Phường/Xã</label>
-                        <input type="text" id="ward" th:field="*{ward}" 
-                               placeholder="Nhập phường/xã" 
-                               class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-                    </div>
-                    <div class="form-group">
-                        <label for="district" class="block text-sm font-semibold text-gray-700">Quận/Huyện</label>
-                        <input type="text" id="district" th:field="*{district}" 
-                               placeholder="Nhập quận/huyện" 
-                               class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-                    </div>
-                    <div class="form-group">
-                        <label for="city" class="block text-sm font-semibold text-gray-700">Thành phố/Tỉnh</label>
-                        <input type="text" id="city" th:field="*{city}" 
-                               placeholder="Nhập thành phố/tỉnh" 
-                               class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-                    </div>
-                    <button type="submit" class="profile-btn-primary">Cập nhật địa chỉ</button>
-                </form>
-            </div>
-        </div>
->>>>>>> 5b7f43e002990d06e1b784d451983dd72f0b2a31
     </main>
 </body>
 </html>
