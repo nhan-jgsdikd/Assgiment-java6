@@ -1,5 +1,5 @@
 package java6.assgiment.Stass;
 
-public class Stas {
-    hiiiiiiii
+public class Product {
+    hello
 }
