@@ -37,4 +37,14 @@ public class OrderDetail {
     public BigDecimal getSubTotal() {
         return price.multiply(new BigDecimal(quantity));
     }
+
+    // ✅ Thêm phương thức để lấy ảnh sản phẩm
+    public String getProductPhoto() {
+        return product != null ? product.getPhoto() : null;
+    }
+
+    // ✅ Thêm phương thức để lấy tên sản phẩm (tuỳ chọn)
+    public String getProductName() {
+        return product != null ? product.getNameProduct() : null;
+    }
 }

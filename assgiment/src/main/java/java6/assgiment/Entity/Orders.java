@@ -21,6 +21,9 @@ public class Orders {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "order_name", length = 100)
+    private String orderName; // New field for order name
+
     @Column(name = "order_date", nullable = false)
     private LocalDateTime orderDate;
 
@@ -49,16 +52,36 @@ public class Orders {
     @Column(name = "shipping_city", length = 255)
     private String shippingCity;
 
+    @Column(name = "cancel_reason", length = 255)
+    private String cancelReason; // New field for cancellation reason
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<OrderDetail> orderDetails;
 
-    // Thêm mối quan hệ với Voucher
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "voucher_id")
     private Voucher voucher;
 
     public enum OrderStatus {
         PREPARING, SHIPPING, DELIVERED, CANCELLED
+    }
+
+    // Thêm phương thức sau vào class Orders
+    public String getStatusDisplay() {
+        if (status == null) return "Không xác định";
+
+        switch (status) {
+            case PREPARING:
+                return "Đang chuẩn bị";
+            case SHIPPING:
+                return "Đang giao hàng";
+            case DELIVERED:
+                return "Đã giao";
+            case CANCELLED:
+                return "Đã hủy";
+            default:
+                return status.name(); // Phòng trường hợp thêm enum mới
+        }
     }
 
     // Phương thức tính tổng tiền sau khi áp dụng voucher

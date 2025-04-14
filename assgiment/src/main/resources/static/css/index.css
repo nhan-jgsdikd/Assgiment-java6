@@ -633,6 +633,7 @@ body {
     width: calc(100% - 100px);
     height: 400px;
     margin: 0 auto;
+    border: #000000 solid 1px;
 }
 
 @media screen and (max-width: 718px) {

@@ -56,7 +56,7 @@
             <div class="brands">
                 <section class="top-brands">
                     <h1>TOP SẢN PHẨM BÁN CHẠY</h1>
-                    <div class="options">
+                    <div class="options   ">
                         <div class="option" th:each="product, stat : ${specificProducts}" 
                              th:style="'--optionBackground:url(/' + ${product.photo} + ');'"
                              th:classappend="${stat.index == 0} ? 'active' : ''">
@@ -84,15 +84,15 @@
                 </div>
             </div>
         <script>
-   document.addEventListener('DOMContentLoaded', () => {
-    const options = document.querySelectorAll('.option');
-    options.forEach(option => {
-        option.addEventListener('click', () => {
-            options.forEach(opt => opt.classList.remove('active'));
-            option.classList.add('active');
-        });
-    });
-});
+            document.addEventListener('DOMContentLoaded', () => {
+                const options = document.querySelectorAll('.option');
+                options.forEach(option => {
+                    option.addEventListener('click', () => {
+                        options.forEach(opt => opt.classList.remove('active'));
+                        option.classList.add('active');
+                    });
+                });
+            });
             let currentSlide = 0;
             const slides = document.querySelector('.slides');
             const totalSlides = document.querySelectorAll('.slides img').length;

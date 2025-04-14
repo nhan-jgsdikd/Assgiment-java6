@@ -1,173 +1,196 @@
+<nav class="navbar navbar-expand-lg sticky-top">
+  <div class="container">
+    <!-- Logo -->
+    <a class="navbar-brand" href="/">
+      <img src="https://graphicdesignjunction.com/wp-content/uploads/2018/04/colorful_logo_1.jpg" alt="Logo" class="logo">
+    </a>
 
+    <!-- Toggle Button for Mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-
-  <nav class="navbar navbar-expand-lg">
-    <div class="container">
-      <!-- Logo -->
-      <a class="navbar-brand" href="/">
-        <img src="https://graphicdesignjunction.com/wp-content/uploads/2018/04/colorful_logo_1.jpg" alt="Logo" class="logo">
-      </a>
-  
-      <!-- Toggle Button for Mobile -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-  
-      <!-- Nav & Search Container -->
-      <div class="collapse navbar-collapse" id="navbarContent">
-        <!-- Search Bar -->
-        <div class="search-container me-auto">
-          <i class="fa-solid fa-magnifying-glass search-icon"></i>
-          <form class="search-form">
-            <input type="text" class="form-control search-input" placeholder="Search products...">
-          </form>
-        </div>
-  
-        <!-- Navigation Items -->
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/">
-              <i class="fa-solid fa-house"></i>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/product">
-              <i class="fa-solid fa-box"></i>
-            </a>
-          </li>
-<!-- Nếu chưa đăng nhập, hiển thị icon login -->
-<li class="nav-item" th:if="${session.loggedInUser == null}">
-  <a class="nav-link" href="/login">
-    <i class="fa-solid fa-florin-sign"></i>
-  </a>
-</li>
-<!-- Nếu đã đăng nhập, hiển thị icon logout -->
-<li class="nav-item" th:if="${session.loggedInUser != null}">
-  <a class="nav-link" href="/logout">
-    <i class="fa-solid fa-right-from-bracket"></i>
-  </a>
-</li>
-          <!-- Các mục khác chỉ hiển thị khi đã đăng nhập -->
-          <li class="nav-item" th:if="${session.loggedInUser != null}">
-            <a class="nav-link" href="/cart">
-              <i class="fa-solid fa-cart-shopping"></i>
-            </a>
-          </li>
-          <li class="nav-item" th:if="${session.loggedInUser != null}">
-            <a class="nav-link" href="/profileoder">
-              <i class="fa-solid fa-user-circle"></i>
-            </a>
-          </li>
-        </ul>
+    <!-- Nav & Search Container -->
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <!-- Search Bar -->
+      <div class="search-container me-auto">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <form class="search-form">
+          <input type="text" class="form-control search-input" placeholder="Search products...">
+        </form>
       </div>
+
+      <!-- Navigation Items -->
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">
+            <i class="fa-solid fa-house me-1"></i> Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/product">
+            <i class="fa-solid fa-box me-1"></i> Product
+          </a>
+        </li>
+        <!-- Nếu chưa đăng nhập, hiển thị icon và text login -->
+        <li class="nav-item" th:if="${session.loggedInUser == null}">
+          <a class="nav-link" href="/login">
+            <i class="fa-solid fa-arrow-right-to-bracket me-1"></i> Login
+          </a>
+        </li>
+        <li class="nav-item" th:if="${session.loggedInUser != null}">
+          <a class="nav-link" href="/cart">
+            <i class="fa-solid fa-cart-shopping me-1"></i> Cart
+          </a>
+        <!-- Nếu đã đăng nhập, hiển thị dropdown cho profile và logout -->
+        <li class="nav-item dropdown" th:if="${session.loggedInUser != null}">
+          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-user-circle me-1"></i> Account
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li><a class="dropdown-item" href="/profile">Profile</a></li>
+            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+          </ul>
+        </li>
+        <!-- Cart chỉ hiển thị khi đã đăng nhập -->
+
+        </li>
+      </ul>
     </div>
-  </nav>
-  
-  <style>
-    :root {
-      --primary-color: #f8b1c3; /* Hồng phấn */
-      --secondary-color: #555;  /* Xám đậm */
-      --bg-color: #fff;         /* Nền trắng */
-      --shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      --transition: 0.3s ease;
+  </div>
+</nav>
+
+<style>
+  :root {
+    --primary-color: #f8b1c3; /* Hồng phấn */
+    --secondary-color: #555;  /* Xám đậm */
+    --bg-color: #fff;         /* Nền trắng */
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --transition: 0.3s ease;
+  }
+
+  .navbar {
+    background: var(--bg-color);
+    box-shadow: var(--shadow);
+    padding: 0.75rem 0;
+    transition: background var(--transition);
+  }
+
+  /* Logo */
+  .navbar-brand .logo {
+    height: 40px;
+    transition: transform var(--transition);
+  }
+  .navbar-brand:hover .logo {
+    transform: scale(1.05);
+  }
+
+  /* Search Container */
+  .search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    transition: width var(--transition);
+  }
+  .search-icon {
+    font-size: 1.2rem;
+    color: var(--secondary-color);
+    cursor: pointer;
+    transition: color var(--transition);
+  }
+  .search-icon:hover {
+    color: var(--primary-color);
+  }
+  .search-form {
+    margin-left: 0.5rem;
+    width: 0;
+    overflow: hidden;
+    transition: width var(--transition);
+  }
+  .search-form.active {
+    width: 250px; 
+  }
+  .search-input {
+    border: 1px solid var(--primary-color);
+    border-radius: 20px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    box-shadow: var(--shadow);
+    width: 100%;
+    background: var(--bg-color);
+    color: var(--secondary-color);
+    transition: box-shadow var(--transition);
+  }
+  .search-input:focus {
+    outline: none;
+    box-shadow: 0 0 5px var(--primary-color);
+  }
+
+  /* Navigation Items */
+  .navbar-nav {
+    gap: 1rem;
+    align-items: center;
+  }
+  .nav-link {
+    color: var(--secondary-color);
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    transition: color var(--transition), background-color var(--transition);
+    display: flex;
+    align-items: center;
+  }
+  .nav-link:hover,
+  .nav-link:focus {
+    color: var(--primary-color);
+    background-color: rgba(0,0,0,0.05);
+  }
+  .nav-link i {
+    font-size: 1.2rem;
+  }
+
+  /* Dropdown Menu */
+  .dropdown-menu {
+    background-color: var(--bg-color);
+    box-shadow: var(--shadow);
+  }
+  .dropdown-item {
+    color: var(--secondary-color);
+    transition: background-color var(--transition), color var(--transition);
+  }
+  .dropdown-item:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
+
+  /* Mobile Styles */
+  @media (max-width: 991.98px) {
+    .navbar-collapse {
+      padding: 1rem;
     }
-  
-    .navbar {
-      background: var(--bg-color);
-      box-shadow: var(--shadow);
-      padding: 0.75rem 0;
-      transition: background var(--transition);
+    .nav-item {
+      margin: 0.5rem 0;
     }
-  
-    /* Logo */
-    .navbar-brand .logo {
-      height: 40px;
-      transition: transform var(--transition);
-    }
-    .navbar-brand:hover .logo {
-      transform: scale(1.05);
-    }
-  
-    /* Search Container */
     .search-container {
-      position: relative;
-      display: flex;
-      align-items: center;
-      transition: width var(--transition);
-    }
-    .search-icon {
-      font-size: 1.2rem;
-      color: var(--secondary-color);
-      cursor: pointer;
-      transition: color var(--transition);
-    }
-    .search-icon:hover {
-      color: var(--primary-color);
-    }
-    .search-form {
-      margin-left: 0.5rem;
-      width: 0;
-      overflow: hidden;
-      transition: width var(--transition);
+      margin-bottom: 1rem;
     }
     .search-form.active {
-      width: 250px; 
-    }
-    .search-input {
-      border: 1px solid var(--primary-color);
-      border-radius: 20px;
-      padding: 0.4rem 0.8rem;
-      font-size: 0.9rem;
-      box-shadow: var(--shadow);
       width: 100%;
-      background: var(--bg-color);
-      color: var(--secondary-color);
     }
-  
-    /* Navigation Items */
-    .navbar-nav {
-      gap: 1rem;
-      align-items: center;
+    .dropdown-menu {
+      width: 100%;
+      text-align: center;
     }
-    .nav-link {
-      color: var(--secondary-color);
-      font-weight: 500;
-      padding: 0.5rem 0.75rem;
-      transition: color var(--transition);
-    }
-    .nav-link:hover,
-    .nav-link:focus {
-      color: var(--primary-color);
-    }
-    .nav-link i {
-      font-size: 1.2rem;
-    }
-  
-    /* Mobile Styles */
-    @media (max-width: 991.98px) {
-      .navbar-collapse {
-        padding: 1rem;
-      }
-      .nav-item {
-        margin: 0.5rem 0;
-      }
-      .search-container {
-        margin-bottom: 1rem;
-      }
-      .search-form.active {
-        width: 100%;
-      }
-    }
-  </style>
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Toggle Search Form
-      const searchIcon = document.querySelector('.search-icon');
-      const searchForm = document.querySelector('.search-form');
-  
-      searchIcon.addEventListener('click', function() {
-        searchForm.classList.toggle('active');
-      });
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Toggle Search Form
+    const searchIcon = document.querySelector('.search-icon');
+    const searchForm = document.querySelector('.search-form');
+
+    searchIcon.addEventListener('click', function() {
+      searchForm.classList.toggle('active');
     });
-  </script>
+  });
+</script>

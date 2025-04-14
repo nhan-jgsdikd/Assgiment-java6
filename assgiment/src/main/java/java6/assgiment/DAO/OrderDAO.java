@@ -20,4 +20,6 @@ public interface OrderDAO extends JpaRepository<Orders, Long> {
     List<Orders> findByStatus(OrderStatus preparing);
 
     List<Orders> findByUser(User loggedInUser);
+
+    List<Orders> findByUserAndStatusAndIsDeletedFalse(User loggedInUser, OrderStatus preparing);
 }

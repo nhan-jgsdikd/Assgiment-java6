@@ -11,9 +11,6 @@ import jakarta.servlet.http.HttpSession;
 import java6.assgiment.DAO.OrderDAO;
 import java6.assgiment.DAO.ProductDAO;
 import java6.assgiment.DAO.UserDAO;
-import java6.assgiment.Entity.Orders;
-import java6.assgiment.Entity.Orders.OrderStatus;
-import java6.assgiment.Entity.Product;
 import java6.assgiment.Entity.User;
 @Controller
 public class AdminController {
@@ -62,17 +59,7 @@ public class AdminController {
 
 
 
-    @GetMapping("/Feedback")
-    public String Feedback(Model model) {
-        User user = (User) session.getAttribute("loggedInUser");
-        if (user == null) {
-            return "redirect:/login";
-        }
-        model.addAttribute("user", user);
-        List<User> users = userDAO.findAll();
-        model.addAttribute("users", users);
-        return "Admin/Feedback";
-    }
+
 
 
 

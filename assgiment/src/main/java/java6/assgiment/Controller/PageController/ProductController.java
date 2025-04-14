@@ -5,20 +5,29 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java6.assgiment.DAO.CommentDAO;
 import java6.assgiment.DAO.ProductDAO;
+import java6.assgiment.Entity.Comment;
 import java6.assgiment.Entity.Product;
+
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 public class ProductController {
 
     @Autowired
     private ProductDAO productDAO;
+
+    @Autowired
+    private CommentDAO commentRepository;
 
     @GetMapping("/product")
     public String product(
@@ -76,10 +85,46 @@ public class ProductController {
             return "redirect:/product";
         }
 
-        // Thêm sản phẩm vào model để truyền sang view
+        // Lấy danh sách bình luận của sản phẩm
+        List<Comment> comments = commentRepository.findByProductId(id);
+
+        // Thêm sản phẩm và bình luận vào model để truyền sang view
         model.addAttribute("product", product);
+        model.addAttribute("comments", comments);
+        model.addAttribute("newComment", new Comment());
 
         // Trả về tên view cho trang chi tiết sản phẩm
         return "Dashboard/ProductDetail";
+    }
+
+    @PostMapping("/product/comment")
+    public String addComment(
+            @RequestParam("productId") Long productId,
+            @RequestParam("content") String content,
+            Model model) {
+        // Tìm sản phẩm theo ID
+        Product product = productDAO.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+        // Lấy username từ người dùng đăng nhập
+        String username = "Guest"; // Mặc định nếu không đăng nhập
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        }
+
+        // Tạo bình luận mới với username từ người dùng
+        Comment comment = Comment.builder()
+                .username(username)
+                .content(content)
+                .createdAt(LocalDateTime.now())
+                .product(product)
+                .build();
+
+        // Lưu bình luận vào database
+        commentRepository.save(comment);
+
+        // Chuyển hướng về trang chi tiết sản phẩm
+        return "redirect:/product/" + productId;
     }
 }

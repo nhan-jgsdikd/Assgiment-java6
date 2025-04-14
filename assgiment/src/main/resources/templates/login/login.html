@@ -93,7 +93,7 @@
         // Password toggle
         document.querySelectorAll('.toggle-password').forEach(icon => {
             icon.addEventListener('click', () => {
-                const passwordInput = icon.previousElementSibling.previousElementSibling;
+                const passwordInput = icon.parentElement.querySelector('input');
                 const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
                 passwordInput.setAttribute('type', type);
                 icon.classList.toggle('fa-eye');

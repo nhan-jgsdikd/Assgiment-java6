@@ -2,14 +2,17 @@ package java6.assgiment.Controller.PageController;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,9 +23,12 @@ import java6.assgiment.DAO.OrderDAO;
 import java6.assgiment.DAO.UserDAO;
 import java6.assgiment.Entity.Orders;
 import java6.assgiment.Entity.User;
+import java6.assgiment.Entity.Orders.OrderStatus;
 
 @Controller
 public class ProfileController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProfileController.class);
 
     @Autowired
     private HttpSession session;
@@ -44,10 +50,22 @@ public class ProfileController {
         if (loggedInUser == null) {
             return "redirect:/login";
         }
-        
+
+        // Lấy danh sách đơn hàng của người dùng
         List<Orders> orders = ordersDAO.findByUser(loggedInUser);
+
+        // Phân loại đơn hàng theo trạng thái
+        Map<OrderStatus, List<Orders>> ordersByStatus = orders.stream()
+                .collect(Collectors.groupingBy(Orders::getStatus));
+
+        // Đảm bảo tất cả trạng thái đều có trong model
+        model.addAttribute("preparingOrders", ordersByStatus.getOrDefault(OrderStatus.PREPARING, List.of()));
+        model.addAttribute("shippingOrders", ordersByStatus.getOrDefault(OrderStatus.SHIPPING, List.of()));
+        model.addAttribute("deliveredOrders", ordersByStatus.getOrDefault(OrderStatus.DELIVERED, List.of()));
+        model.addAttribute("cancelledOrders", ordersByStatus.getOrDefault(OrderStatus.CANCELLED, List.of()));
         model.addAttribute("user", loggedInUser);
-        model.addAttribute("orders", orders);
+        model.addAttribute("hasOrders", !orders.isEmpty()); // Thêm hasOrders
+
         return "Dashboard/Profile/profileoder";
     }
 
@@ -77,15 +95,102 @@ public class ProfileController {
         if (loggedInUser == null) {
             return "redirect:/login";
         }
-        
+
+        // Lấy danh sách đơn hàng của người dùng
         List<Orders> orders = ordersDAO.findByUser(loggedInUser);
-        List<Orders> recentOrders = orders.stream()
-            .sorted(Comparator.comparing(Orders::getOrderDate, Comparator.nullsLast(Comparator.reverseOrder())))
-            .limit(3)
-            .collect(Collectors.toList());
+
+        // Phân loại đơn hàng theo trạng thái
+        Map<OrderStatus, List<Orders>> ordersByStatus = orders.stream()
+                .collect(Collectors.groupingBy(Orders::getStatus));
+
+        // Đảm bảo tất cả trạng thái đều có trong model
+        model.addAttribute("preparingOrders", ordersByStatus.getOrDefault(OrderStatus.PREPARING, List.of()));
+        model.addAttribute("shippingOrders", ordersByStatus.getOrDefault(OrderStatus.SHIPPING, List.of()));
+        model.addAttribute("deliveredOrders", ordersByStatus.getOrDefault(OrderStatus.DELIVERED, List.of()));
+        model.addAttribute("cancelledOrders", ordersByStatus.getOrDefault(OrderStatus.CANCELLED, List.of()));
         model.addAttribute("user", loggedInUser);
-        model.addAttribute("orders", recentOrders);
+        model.addAttribute("hasOrders", !orders.isEmpty()); // Thêm hasOrders
+
         return "Dashboard/Profile/profile";
+    }
+
+    @GetMapping("/order/cancel/{id}")
+    public String showCancelOrderForm(@PathVariable("id") Long orderId, Model model, RedirectAttributes redirectAttributes) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập để thực hiện thao tác này!");
+            return "redirect:/login";
+        }
+
+        Orders order = ordersDAO.findById(orderId).orElse(null);
+        if (order == null) {
+            redirectAttributes.addFlashAttribute("error", "Đơn hàng không tồn tại!");
+            return "redirect:/profileoder";
+        }
+
+        // Kiểm tra xem đơn hàng có thuộc về người dùng hiện tại không
+        if (!order.getUser().getId().equals(loggedInUser.getId())) {
+            redirectAttributes.addFlashAttribute("error", "Bạn không có quyền hủy đơn hàng này!");
+            return "redirect:/profileoder";
+        }
+
+        // Kiểm tra trạng thái đơn hàng (chỉ cho phép hủy nếu đang ở trạng thái PREPARING)
+        if (order.getStatus() != OrderStatus.PREPARING) {
+            redirectAttributes.addFlashAttribute("error", "Đơn hàng không thể hủy ở trạng thái hiện tại!");
+            return "redirect:/profileoder";
+        }
+
+        model.addAttribute("order", order);
+        return "Dashboard/Profile/cancel_reason_form"; // New template for cancellation reason form
+    }
+
+    @PostMapping("/order/cancel/{id}")
+    public String cancelOrder(
+            @PathVariable("id") Long orderId,
+            @RequestParam("cancelReason") String cancelReason,
+            RedirectAttributes redirectAttributes) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập để thực hiện thao tác này!");
+            return "redirect:/login";
+        }
+
+        try {
+            // Tìm đơn hàng theo ID
+            Orders order = ordersDAO.findById(orderId).orElse(null);
+            if (order == null) {
+                logger.warn("Order with ID {} not found", orderId);
+                redirectAttributes.addFlashAttribute("error", "Đơn hàng không tồn tại!");
+                return "redirect:/profileoder";
+            }
+
+            // Kiểm tra xem đơn hàng có thuộc về người dùng hiện tại không
+            if (!order.getUser().getId().equals(loggedInUser.getId())) {
+                logger.warn("User {} attempted to cancel order {} which they do not own", loggedInUser.getId(), orderId);
+                redirectAttributes.addFlashAttribute("error", "Bạn không có quyền hủy đơn hàng này!");
+                return "redirect:/profileoder";
+            }
+
+            // Kiểm tra trạng thái đơn hàng (chỉ cho phép hủy nếu đang ở trạng thái PREPARING)
+            if (order.getStatus() != OrderStatus.PREPARING) {
+                logger.warn("Order {} cannot be canceled because its status is {}", orderId, order.getStatus());
+                redirectAttributes.addFlashAttribute("error", "Đơn hàng không thể hủy ở trạng thái hiện tại!");
+                return "redirect:/profileoder";
+            }
+
+            // Cập nhật trạng thái đơn hàng thành CANCELLED và lưu lý do hủy
+            order.setStatus(OrderStatus.CANCELLED);
+            order.setCancelReason(cancelReason);
+            ordersDAO.save(order);
+            logger.info("Order {} canceled successfully by user {} with reason: {}", orderId, loggedInUser.getId(), cancelReason);
+
+            redirectAttributes.addFlashAttribute("success", "Hủy đơn hàng thành công!");
+        } catch (Exception e) {
+            logger.error("Error canceling order {}: {}", orderId, e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("error", "Lỗi khi hủy đơn hàng: " + e.getMessage());
+        }
+
+        return "redirect:/profileoder";
     }
 
     @PostMapping("/profile/update")
@@ -142,7 +247,6 @@ public class ProfileController {
         }
 
         try {
-            // Cập nhật các trường địa chỉ
             if (addressLine != null) loggedInUser.setAddressLine(addressLine);
             if (ward != null) loggedInUser.setWard(ward);
             if (district != null) loggedInUser.setDistrict(district);
@@ -154,22 +258,11 @@ public class ProfileController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Lỗi hệ thống: " + e.getMessage());
         }
-        return "redirect:/profileddress"; // Chuyển hướng về trang địa chỉ sau khi cập nhật
+        return "redirect:/profileddress";
     }
-
-
-
-
-
 
     @GetMapping("/caimewgiv")
     public String caimewgiv(Model model) {
-
         return "Dashboard/Profile/caimewgiv";
     }
-
-
-
-
-
 }
