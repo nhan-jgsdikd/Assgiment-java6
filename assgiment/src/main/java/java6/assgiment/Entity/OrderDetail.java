@@ -25,6 +25,9 @@ public class OrderDetail {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @Column(name = "product_name", length = 255) // New field to store product name
+    private String productName;
+
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
@@ -38,13 +41,11 @@ public class OrderDetail {
         return price.multiply(new BigDecimal(quantity));
     }
 
-    // ✅ Thêm phương thức để lấy ảnh sản phẩm
     public String getProductPhoto() {
         return product != null ? product.getPhoto() : null;
     }
 
-    // ✅ Thêm phương thức để lấy tên sản phẩm (tuỳ chọn)
     public String getProductName() {
-        return product != null ? product.getNameProduct() : null;
+        return productName != null ? productName : (product != null ? product.getNameProduct() : null);
     }
 }

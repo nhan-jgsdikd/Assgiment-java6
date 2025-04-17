@@ -44,17 +44,6 @@ public class AdminController {
 
 
 
-    @GetMapping("/Collaborate")
-    public String Collaborate(Model model) {
-        User user = (User) session.getAttribute("loggedInUser");
-        if (user == null) {
-            return "redirect:/login";
-        }
-        model.addAttribute("user", user);
-        List<User> users = userDAO.findAll();
-        model.addAttribute("users", users);
-        return "Admin/Collaborate";
-    }
 
 
 

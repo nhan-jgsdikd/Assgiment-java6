@@ -275,20 +275,26 @@ public class CartController {
         if (loggedInUser == null) {
             return "redirect:/login";
         }
-
+    
         Optional<Orders> cartOrderOpt = ordersDAO.findByUserAndStatusAndIsDeleted(loggedInUser, OrderStatus.PREPARING, false);
         if (!cartOrderOpt.isPresent() || orderDetailDAO.findByOrderAndIsDeleted(cartOrderOpt.get(), false).isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Giỏ hàng trống!");
             return "redirect:/cart";
         }
-
+    
         Orders cartOrder = cartOrderOpt.get();
+        // Ensure orderName is set
+        if (cartOrder.getOrderName() == null || cartOrder.getOrderName().isEmpty()) {
+            cartOrder.setOrderName(String.format("Order-%s", 
+                loggedInUser.getUsername()));
+        }
+    
         List<OrderDetail> cartItems = orderDetailDAO.findByOrderAndIsDeleted(cartOrder, false);
         double totalPrice = cartItems.stream()
             .mapToDouble(item -> item.getPrice().doubleValue() * item.getQuantity())
             .sum();
         double voucherDiscount = 0;
-
+    
         if (voucherCode != null && !voucherCode.isEmpty()) {
             Optional<Voucher> voucherOpt = voucherDAO.findByCode(voucherCode);
             if (voucherOpt.isPresent() && !voucherOpt.get().getIsDeleted() &&
@@ -309,9 +315,9 @@ public class CartController {
                 return "redirect:/checkout";
             }
         }
-
+    
         double totalPayment = totalPrice - voucherDiscount;
-
+    
         cartOrder.setOrderDate(LocalDateTime.now());
         cartOrder.setTotalAmount(totalPayment);
         cartOrder.setShippingAddressLine(shippingAddressLine);
@@ -320,15 +326,14 @@ public class CartController {
         cartOrder.setShippingCity(shippingCity);
         cartOrder.setPaymentMethod(paymentMethod);
         ordersDAO.save(cartOrder);
-
+    
         cartOrder.setIsDeleted(true);
         ordersDAO.save(cartOrder);
-
+    
         model.addAttribute("message", "Đơn hàng của bạn đã được gửi, đang chờ giao hàng!");
         return "Dashboard/checkout-success";
     }
 
-    // Thêm sản phẩm vào giỏ hàng
     @PostMapping("/add-to-cart")
     public String addToCart(
             @RequestParam("productId") Long productId,
@@ -337,68 +342,83 @@ public class CartController {
             @RequestParam(defaultValue = "") String classify,
             @RequestParam(defaultValue = "") String search,
             RedirectAttributes redirectAttributes) {
-
+    
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         if (loggedInUser == null) {
             redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng");
             return "redirect:/login";
         }
-
+    
         Optional<Product> productOpt = productDAO.findById(productId);
         if (!productOpt.isPresent() || productOpt.get().getIsDeleted()) {
             redirectAttributes.addFlashAttribute("error", "Sản phẩm không tồn tại hoặc đã bị xóa!");
             return "redirect:/product";
         }
-
+    
         Product product = productOpt.get();
         if (product.getQuanlity() <= 0) {
             redirectAttributes.addFlashAttribute("error", "Sản phẩm đã hết hàng!");
             return "redirect:/product";
         }
-
+    
         Optional<Orders> cartOrderOpt = ordersDAO.findByUserAndStatusAndIsDeleted(loggedInUser, OrderStatus.PREPARING, false);
         Orders cartOrder;
         if (!cartOrderOpt.isPresent()) {
+            // Generate a meaningful orderName, e.g., "Order-<username>-<timestamp>"
+            String orderName = String.format("Order-%s", 
+                loggedInUser.getUsername());
+    
             cartOrder = Orders.builder()
-                .user(loggedInUser)
-                .orderDate(LocalDateTime.now())
-                .totalAmount(0.0)
-                .paymentMethod("COD")
-                .status(OrderStatus.PREPARING)
-                .isDeleted(false)
-                .build();
+                    .user(loggedInUser)
+                    .orderName(orderName) // Set orderName
+                    .orderDate(LocalDateTime.now())
+                    .totalAmount(0.0)
+                    .paymentMethod("COD")
+                    .status(OrderStatus.PREPARING)
+                    .isDeleted(false)
+                    .build();
             ordersDAO.save(cartOrder);
         } else {
             cartOrder = cartOrderOpt.get();
+            // Optionally update orderName if needed
+            if (cartOrder.getOrderName() == null || cartOrder.getOrderName().isEmpty()) {
+                String orderName = String.format("Order-%s-%s", 
+                    loggedInUser.getUsername(), 
+                    LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
+                cartOrder.setOrderName(orderName);
+                ordersDAO.save(cartOrder);
+            }
         }
-
+    
         List<OrderDetail> cartItems = orderDetailDAO.findByOrderAndIsDeleted(cartOrder, false);
         boolean productExists = false;
         for (OrderDetail item : cartItems) {
             if (item.getProduct().getId().equals(productId)) {
                 item.setQuantity(item.getQuantity() + 1);
+                item.setProductName(product.getNameProduct()); // Set productName
                 orderDetailDAO.save(item);
                 productExists = true;
                 break;
             }
         }
-
+    
         if (!productExists) {
             OrderDetail newItem = OrderDetail.builder()
-                .order(cartOrder)
-                .product(product)
-                .quantity(1)
-                .price(new java.math.BigDecimal(product.getPrice()))
-                .isDeleted(false)
-                .build();
+                    .order(cartOrder)
+                    .product(product)
+                    .productName(product.getNameProduct()) // Set productName
+                    .quantity(1)
+                    .price(new java.math.BigDecimal(product.getPrice()))
+                    .isDeleted(false)
+                    .build();
             orderDetailDAO.save(newItem);
         }
-
+    
         updateOrderTotal(cartOrder);
-
+    
         product.setQuanlity(product.getQuanlity() - 1);
         productDAO.save(product);
-
+    
         redirectAttributes.addAttribute("page", page);
         redirectAttributes.addAttribute("sort", sort);
         redirectAttributes.addAttribute("classify", classify);
