@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{/Navar/Layout :: view(~{::main})}">
+<body>
+    <main class="content">
+        <link rel="stylesheet" href="/css/Cart.css">
+        <div class="cart-container" th:if="${not #lists.isEmpty(cartItems)}">
+            <h1 class="cart-header">Giỏ hàng của tôi</h1>
+
+            <!-- Danh sách người bán -->
+            <div class="seller-section" th:each="sellerEntry : ${sellerGroups}">
+                <!-- Danh sách sản phẩm -->
+                <div class="product-item" th:each="item : ${sellerEntry.value}">
+                    <div class="product-info">
+                        <img th:src="@{${item.product.photo}}" class="product-image" 
+                             th:alt="${item.product.nameProduct}">
+                        <div class="product-details">
+                            <div class="product-title" th:text="${item.product.nameProduct}"></div>
+                            <div class="product-variant" th:text="${item.product.classify}"></div>
+                        </div>
+                    </div>
+                    <div class="price-column">
+                        <span th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span>
+                    </div>
+                    <div>
+                        <input type="number" class="quantity-input" 
+                               th:value="${item.quantity}" min="1"
+                               th:data-id="${item.product.id}">
+                    </div>
+                    <div class="price-column">
+                        <span th:text="${#numbers.formatDecimal(item.subTotal, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span>
+                    </div>
+                    <a th:href="@{/remove-from-cart(id=${item.product.id})}" class="remove-btn">Xóa</a>
+                </div>
+
+                <!-- Khuyến mãi (chưa có logic) -->
+                <div class="promotion-section" th:if="${not #lists.isEmpty(promotions)}">
+                    <div class="summary-row">
+                        <span>Tiki Khuyến Mãi</span>
+                        <span>Có thể chọn <span th:text="${promotions.size()}"></span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tổng thanh toán -->
+            <div class="checkout-summary">
+                <div class="summary-row">
+                    <span>Tổng tiền hàng</span>
+                    <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span>
+                </div>
+                <div class="summary-row">
+                    <span>Giảm giá trực tiếp</span>
+                    <span>-<span th:text="${#numbers.formatDecimal(totalDiscount, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span></span>
+                </div>
+                <div class="summary-row total-row">
+                    <span>Tổng thanh toán</span>
+                    <span style="color: #d70018" 
+                          th:text="${#numbers.formatDecimal(totalPayment, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span>
+                </div>
+                <!-- Chuyển hướng đến trang checkout thay vì xử lý trực tiếp -->
+                <form th:action="@{/checkout}" method="get">
+                    <button type="submit" class="checkout-button">Mua hàng (<span th:text="${totalItems}"></span>)</button>
+                </form>
+                <div style="text-align: right; margin-top: 10px; color: #666;">
+                    Tiết kiệm <span th:text="${#numbers.formatDecimal(totalDiscount, 0, 'COMMA', 2, 'POINT')} + 'đ'"></span>
+                    (Đã bao gồm VAT nếu có)
+                </div>
+            </div>
+        </div>
+
+        <!-- Giỏ hàng trống -->
+        <div class="empty-cart" th:if="${#lists.isEmpty(cartItems)}" style="text-align: center; padding: 50px;">
+            <h2>Giỏ hàng của bạn đang trống</h2>
+            <a th:href="@{/product}" class="btn btn-primary">Tiếp tục mua sắm</a>
+        </div>
+
+        <script th:inline="javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.quantity-input').forEach(input => {
+                    input.addEventListener('change', function() {
+                        const productId = this.dataset.id;
+                        const newQuantity = this.value;
+                        
+                        fetch('/update-cart', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({
+                                productId: productId,
+                                quantity: newQuantity
+                            })
+                        }).then(response => {
+                            if (response.ok) {
+                                location.reload();
+                            } else {
+                                alert('Cập nhật giỏ hàng thất bại!');
+                            }
+                        }).catch(error => {
+                            console.error('Error:', error);
+                            alert('Đã xảy ra lỗi khi cập nhật giỏ hàng!');
+                        });
+                    });
+                });
+            });
+        </script>
+    </main>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{/Navar/Layout :: view(~{::main})}">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <main class="contact-container" th:fragment="main">
+        <style>
+            :root {
+                --primary-color: #2A5C82;
+                --hover-color: #1D435C;
+                --text-color: #333;
+                --background-color: #f9fbfd;
+                --success-color: #28a745;
+                --error-color: #dc3545;
+            }
+
+            /* Container */
+            .contact-container {
+                max-width: 1200px;
+                margin: 2rem auto;
+                padding: 0 1.5rem;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+                gap: 2.5rem;
+                align-items: start;
+            }
+
+            /* Section */
+            .contact-section {
+                background: white;
+                border-radius: 15px;
+                padding: 2rem;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            .contact-section:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            }
+
+            /* Section Title */
+            .section-title {
+                color: var(--primary-color);
+                font-size: 1.7rem;
+                margin-bottom: 1.5rem;
+                position: relative;
+                font-weight: 600;
+            }
+            .section-title::after {
+                content: '';
+                position: absolute;
+                bottom: -5px;
+                left: 0;
+                width: 40px;
+                height: 3px;
+                background: var(--primary-color);
+                border-radius: 2px;
+            }
+
+            /* Notification */
+            .notification {
+                width: 100%;
+                max-width: 600px;
+                margin: 0 auto 1.5rem auto;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                font-size: 1rem;
+                font-weight: 500;
+                text-align: center;
+                position: relative;
+                animation: fadeIn 0.5s ease;
+            }
+            .notification.success {
+                background: rgba(40, 167, 69, 0.1);
+                color: var(--success-color);
+                border: 1px solid var(--success-color);
+            }
+            .notification.error {
+                background: rgba(220, 53, 69, 0.1);
+                color: var(--error-color);
+                border: 1px solid var(--error-color);
+            }
+            .notification i {
+                margin-right: 0.5rem;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            /* Form */
+            .contact-form .form-group {
+                margin-bottom: 1.2rem;
+            }
+            .form-input {
+                width: 100%;
+                padding: 0.9rem 1.2rem;
+                border: 2px solid #e3e9ef;
+                border-radius: 10px;
+                font-size: 1rem;
+                transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            }
+            .form-input:focus {
+                border-color: var(--primary-color);
+                outline: none;
+                box-shadow: 0 0 5px rgba(42, 92, 130, 0.2);
+            }
+            .form-input::placeholder {
+                color: #999;
+            }
+            .submit-btn {
+                background: var(--primary-color);
+                color: white;
+                padding: 0.9rem 2rem;
+                border: none;
+                border-radius: 10px;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: background 0.3s ease, transform 0.3s ease;
+                width: 100%;
+                font-weight: 600;
+            }
+            .submit-btn:hover {
+                background: var(--hover-color);
+                transform: translateY(-3px);
+            }
+
+            /* Contact Info */
+            .contact-info-item {
+                display: flex;
+                align-items: center;
+                margin-bottom: 1.2rem;
+                color: var(--text-color);
+                font-size: 1rem;
+            }
+            .contact-icon {
+                font-size: 1.3rem;
+                min-width: 40px;
+                color: var(--primary-color);
+            }
+
+            /* Social Links */
+            .social-links {
+                margin-top: 1.5rem;
+                display: flex;
+                gap: 1rem;
+            }
+            .social-link {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 45px;
+                height: 45px;
+                border-radius: 50%;
+                background: #f0f4f8;
+                color: var(--primary-color);
+                transition: all 0.3s ease;
+                text-decoration: none;
+            }
+            .social-link:hover {
+                background: var(--primary-color);
+                color: white;
+                transform: translateY(-5px);
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                .contact-container {
+                    grid-template-columns: 1fr;
+                    padding: 0 1rem;
+                }
+                .contact-section {
+                    padding: 1.5rem;
+                }
+            }
+        </style>
+
+        <!-- Thông báo thành công hoặc lỗi -->
+        <div class="notification success" th:if="${successMessage}">
+            <i class="fas fa-check-circle"></i>
+            <span th:text="${successMessage}"></span>
+        </div>
+        <div class="notification error" th:if="${errorMessage}">
+            <i class="fas fa-exclamation-circle"></i>
+            <span th:text="${errorMessage}"></span>
+        </div>
+
+        <!-- Contact Form -->
+        <section class="contact-section">
+            <h2 class="section-title">Liên hệ với chúng tôi</h2>
+            <form class="contact-form" th:action="@{/contact/submit}" th:object="${contact}" method="post">
+                <div class="form-group">
+                    <input type="text" th:field="*{username}" class="form-input" placeholder="Họ và tên" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" th:field="*{email}" class="form-input" placeholder="Địa chỉ email" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" th:field="*{phone}" class="form-input" placeholder="Số điện thoại" required>
+                </div>
+                <div class="form-group">
+                    <textarea th:field="*{message}" class="form-input" placeholder="Nội dung tin nhắn" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Gửi tin nhắn</button>
+            </form>
+        </section>
+
+        <!-- Contact Information -->
+        <section class="contact-section">
+            <h2 class="section-title">Thông tin liên hệ</h2>
+            <div class="contact-info">
+                <div class="contact-info-item">
+                    <i class="fas fa-map-marker-alt contact-icon"></i>
+                    <span>Qua cam chơi đi rồi biết ở đâu</span>
+                </div>
+                <div class="contact-info-item">
+                    <i class="fas fa-phone contact-icon"></i>
+                    <span>+84 971 305 479</span>
+                </div>
+                <div class="contact-info-item">
+                    <i class="fas fa-envelope contact-icon"></i>
+                    <span>Dicampuchiahong@example.com</span>
+                </div>
+            </div>
+            <div class="social-links">
+                <a href="https://facebook.com" class="social-link" target="_blank">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://x.com" class="social-link" target="_blank">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://instagram.com" class="social-link" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

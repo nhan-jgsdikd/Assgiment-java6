@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{/Navar/Layout :: view(~{::main})}">
+<body>
+    <main class="profile-container">
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/css/profile.css">
+
+        <!-- Sidebar -->
+        <aside class="profile-sidebar col-span-1 bg-white shadow rounded-lg p-6">
+            <nav>
+              <ul class="space-y-4">
+                <li>
+                  <a href="/profile" class="block p-3 rounded hover:bg-gray-100 transition">Trang Cá Nhân</a>
+                </li>
+                <li>
+                  <a href="/profileaccount" class="block p-3 rounded hover:bg-gray-100 transition">Quản Lý Tài Khoản</a>
+                </li>
+                <li>
+                  <a href="/profileddress" class="block p-3 rounded hover:bg-gray-100 transition">Địa Chỉ</a>
+                </li>
+                <li>
+                    <a href="/profileoder" class="block p-3 rounded text-blue-600  transition">
+                    Quản Lý Đơn Hàng
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </aside>
+
+        <!-- Main Content -->
+        <div class="profile-main-content">
+            <div class="profile-header">
+                <h1>Chỉnh Sửa Thông Tin Cá Nhân</h1>
+                <form th:action="@{/profile/update}" th:object="${user}" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="img" class="block text-sm font-semibold text-gray-700">Ảnh đại diện</label>
+                        <img th:src="@{${user.img != null ? user.img : '/img/default-avatar.jpg'}}" 
+                             class="profile-image" alt="User Avatar">
+                        <input type="file" id="img" name="imgFile" accept="image/*" class="mt-2">
+                    </div>
+                    <div class="form-group">
+                        <label for="username" class="block text-sm font-semibold text-gray-700">Tên người dùng</label>
+                        <input type="text" id="username" th:field="*{username}" 
+                               placeholder="Nhập tên người dùng" 
+                               class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="block text-sm font-semibold text-gray-700">Email</label>
+                        <input type="email" id="email" th:field="*{email}" 
+                               placeholder="Nhập email" 
+                               class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="block text-sm font-semibold text-gray-700">Số điện thoại</label>
+                        <input type="text" id="phone" th:field="*{phone}" 
+                               placeholder="Nhập số điện thoại" 
+                               class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <button type="submit" class="profile-btn-primary">Cập nhật thông tin</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

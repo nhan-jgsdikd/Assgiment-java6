@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{/Navar/Layout :: view(~{::main})}">
+    <body>
+        <main class="content">
+            <link rel="stylesheet" href="css/index.css">
+                <div class="product-layout">
+                <div class="category">
+                    <div class="text1">Danh mục sản phẩm</div>
+                    <hr>
+                    <ul class="list">
+                    <a href=""><img src="img/sonmoi.webp" alt=""> Son môi</a>
+                    <a href=""><img src="img/phannen.webp" alt="" > Phấn nền</a>
+                    <a href=""><img src="img/nuochoa.webp" alt="" > Nước hoa</a>
+                    <a href=""><img src="img/chongnang.webp" alt=""> Kem chống nắng</a>
+                    <a href=""><img src="img/taytrang.webp" alt=""> Nước tẩy trang</a>
+                    <a href=""><img src="img/duongda.webp" alt=""> Kem dưỡng da</a>
+                    </ul>
+                    </div>
+                    <div class="banner-one"><img src="img/banner1.jpg" alt="">
+                </div>
+                </div>
+            <div class="featured-category">
+                <div class="text2">DANH MỤC NỔI BẬT</div>
+                <ul class="category-list">
+                    <li><a href=""><img src="img/sonmoi.webp" alt=""> Son môi</a></li>
+                    <li><a href=""><img src="img/phannen.webp" alt="" > Phấn nền</a></li>
+                    <li><a href=""><img src="img/nuochoa.webp" alt="" > Nước hoa</a></li>
+                    <li><a href=""><img src="img/chongnang.webp" alt=""> Kem chống nắng</a></li>
+                    <li><a href=""><img src="img/taytrang.webp" alt=""> Nước tẩy trang</a></li>
+                    <li><a href=""><img src="img/duongda.webp" alt=""> Kem dưỡng da</a></li>
+                </ul>
+            </div>
+            <div class="product-typical">
+                <div class="text3">DÀNH RIÊNG CHO BẠN</div>
+                <div class="slideshow-container">
+                    <div class="slides">
+                        <img src="img/slide1.webp" alt="Image 1">
+                        <img src="img/slide2.webp" alt="Image 2">
+                        <img src="img/slide3.webp" alt="Image 3">
+                    </div>
+                </div>
+                <div class="products">
+                    <section class="featured-products" id="1">
+                        <div class="product-list">
+                            <div class="product-item" th:each="product : ${indexstaff}">
+                                <img th:src="@{${product.photo}}" th:alt="${product.nameProduct}">
+                                <h3 th:text="${product.nameProduct}">Tên sản phẩm</h3>
+                                <p th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')} + ' VND'">Giá sản phẩm</p>
+                                <button>Xem chi tiết</button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="banner-two"><img src="img/banner2.jpg" alt=""></div>
+            <div class="brands">
+                <section class="top-brands">
+                    <h1>TOP SẢN PHẨM BÁN CHẠY</h1>
+                    <div class="options   ">
+                        <div class="option" th:each="product, stat : ${specificProducts}" 
+                             th:style="'--optionBackground:url(/' + ${product.photo} + ');'"
+                             th:classappend="${stat.index == 0} ? 'active' : ''">
+                            <div class="shadow"></div>
+                            <div class="label">
+                                <div class="icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="info">
+                                    <div class="main" style="color: black;" th:text="${product.nameProduct}">Tên sản phẩm</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="scent">
+                <div class="banner-three"><p class="text-perfume">Danh sách nước hoa</p><img src="img/banner6.jpg" alt=""></div>
+                <div class="perfume-list">
+                    <div class="perfume-item" th:each="product : ${perfumeproducts}">
+                        <img th:src="@{${product.photo}}" th:alt="${product.nameProduct}">
+                        <h3 th:text="${product.nameProduct}">Tên sản phẩm</h3>
+                        <p th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')} + ' VND'">Giá sản phẩm</p>
+                    </div>
+                </div>
+            </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const options = document.querySelectorAll('.option');
+                options.forEach(option => {
+                    option.addEventListener('click', () => {
+                        options.forEach(opt => opt.classList.remove('active'));
+                        option.classList.add('active');
+                    });
+                });
+            });
+            let currentSlide = 0;
+            const slides = document.querySelector('.slides');
+            const totalSlides = document.querySelectorAll('.slides img').length;
+
+            function showNextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                updateSlidePosition();
+            }
+
+            function updateSlidePosition() {
+                slides.style.transform = `translateX(${-currentSlide * 300}px)`;
+            }
+            setInterval(showNextSlide, 3000);
+
+            document.addEventListener('DOMContentLoaded', () => {
+    const brandsInner = document.querySelector('.brands-inner');
+    const brandItems = document.querySelectorAll('.brand-item');
+    const prevButton = document.querySelector('.prev-button');
+    const nextButton = document.querySelector('.next-button');
+
+    let currentIndex = 0;
+
+    const updatePositions = () => {
+        brandItems.forEach((item, index) => {
+            if (index === currentIndex) {
+                item.setAttribute('data-position', 'center');
+            } else if (index === currentIndex - 1) {
+                item.setAttribute('data-position', 'left');
+            } else if (index === currentIndex + 1) {
+                item.setAttribute('data-position', 'right');
+            } else {
+                item.setAttribute('data-position', 'hidden');
+            }
+        });
+    };
+
+    prevButton.addEventListener('click', () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updatePositions();
+        }
+    });
+
+    nextButton.addEventListener('click', () => {
+        if (currentIndex < brandItems.length - 1) {
+            currentIndex++;
+            updatePositions();
+        }
+    });
+    updatePositions();
+});
+        </script>
+        </main>
+    </body>
+</html>

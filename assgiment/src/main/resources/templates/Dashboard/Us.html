@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{/Navar/Layout :: view(~{::main})}">
+    <body>
+        <main class="content">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+            <style>
+                * {
+                    box-sizing: border-box;
+                }
+
+                .content {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    font-family: 'Arial', sans-serif;
+                }
+
+                h1, h2 {
+                    color: #333;
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+
+                /* FAQ Section */
+                .faq-section {
+                    margin-bottom: 40px;
+                }
+
+                .faq-item {
+                    border-bottom: 1px solid #e0e0e0;
+                    margin-bottom: 10px;
+                }
+
+                .faq-question {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 15px;
+                    background-color: #f9f9f9;
+                    cursor: pointer;
+                    transition: background-color 0.3s;
+                }
+
+                .faq-question:hover {
+                    background-color: #f0f0f0;
+                }
+
+                .faq-question h3 {
+                    margin: 0;
+                    font-size: 18px;
+                    color: #333;
+                }
+
+                .faq-question i {
+                    font-size: 20px;
+                    color: #666;
+                    transition: transform 0.3s;
+                }
+
+                .faq-question.active i {
+                    transform: rotate(180deg);
+                }
+
+                .faq-answer {
+                    display: none;
+                    padding: 15px;
+                    background-color: #fff;
+                    font-size: 16px;
+                    line-height: 1.6;
+                    color: #555;
+                }
+
+                .faq-answer.active {
+                    display: block;
+                }
+
+                /* Support Section */
+                .support-section {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 40px;
+                    justify-content: space-between;
+                }
+
+                .support-info, .support-form {
+                    flex: 1;
+                    min-width: 300px;
+                }
+
+                .support-info h3, .support-form h3 {
+                    font-size: 20px;
+                    color: #333;
+                    margin-bottom: 15px;
+                }
+
+                .support-info p {
+                    font-size: 16px;
+                    color: #555;
+                    margin: 10px 0;
+                    display: flex;
+                    align-items: center;
+                }
+
+                .support-info p i {
+                    margin-right: 10px;
+                    color: #007bff;
+                }
+
+                .support-form .form-group {
+                    margin-bottom: 20px;
+                }
+
+                .support-form label {
+                    display: block;
+                    font-size: 14px;
+                    color: #333;
+                    margin-bottom: 5px;
+                }
+
+                .support-form input, .support-form textarea {
+                    width: 100%;
+                    padding: 10px;
+                    border: 1px solid #ddd;
+                    border-radius: 5px;
+                    font-size: 16px;
+                    color: #333;
+                }
+
+                .support-form textarea {
+                    resize: vertical;
+                    min-height: 100px;
+                }
+
+                .support-form input:focus, .support-form textarea:focus {
+                    outline: none;
+                    border-color: #007bff;
+                    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+                }
+
+                .support-form .error-message {
+                    color: red;
+                    font-size: 14px;
+                    display: none;
+                    margin-top: 5px;
+                }
+
+                .support-form button {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 100%;
+                    padding: 12px;
+                    background-color: #007bff;
+                    color: #fff;
+                    border: none;
+                    border-radius: 5px;
+                    font-size: 16px;
+                    cursor: pointer;
+                    transition: background-color 0.3s;
+                }
+
+                .support-form button:hover {
+                    background-color: #0056b3;
+                }
+
+                .support-form button:disabled {
+                    background-color: #ccc;
+                    cursor: not-allowed;
+                }
+
+                .support-form button i {
+                    margin-right: 8px;
+                    display: none;
+                }
+
+                .support-form button:disabled i {
+                    display: inline-block;
+                }
+
+                .notification {
+                    padding: 10px;
+                    margin: 10px 0;
+                    border-radius: 5px;
+                    text-align: center;
+                }
+
+                .success {
+                    background-color: #d4edda;
+                    color: #155724;
+                }
+
+                .error {
+                    background-color: #f8d7da;
+                    color: #721c24;
+                }
+
+                @media (max-width: 768px) {
+                    .support-section {
+                        flex-direction: column;
+                    }
+
+                    .faq-question h3 {
+                        font-size: 16px;
+                    }
+
+                    .faq-answer {
+                        font-size: 14px;
+                    }
+                }
+            </style>
+
+            <!-- FAQ Section -->
+            <section class="faq-section">
+                <h1>Câu Hỏi Thường Gặp (FAQ)</h1>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Làm thế nào để đặt hàng trên website?</h3>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Để đặt hàng, bạn cần đăng nhập vào tài khoản, thêm sản phẩm vào giỏ hàng, sau đó vào trang thanh toán. Điền thông tin giao hàng, chọn phương thức thanh toán (ZaloPay hoặc COD), và xác nhận đơn hàng.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Phí vận chuyển được tính như thế nào?</h3>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Chúng tôi áp dụng phí vận chuyển cố định 30,000đ cho mỗi đơn hàng, bất kể giá trị đơn hàng hoặc địa điểm giao hàng.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Tôi có thể đổi hoặc trả hàng không?</h3>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Chính sách đổi trả của chúng tôi cho phép đổi hoặc trả hàng trong vòng 7 ngày kể từ ngày nhận hàng, với điều kiện sản phẩm chưa sử dụng và còn nguyên bao bì. Vui lòng liên hệ đội hỗ trợ để biết thêm chi tiết.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Làm sao để sử dụng mã voucher?</h3>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Trong trang thanh toán, nhấn vào nút "Chọn Voucher", chọn mã voucher phù hợp, và nhấn "Áp dụng". Giảm giá sẽ được tự động áp dụng nếu đơn hàng đáp ứng điều kiện của voucher.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Tôi không nhận được email xác nhận đơn hàng, phải làm sao?</h3>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Vui lòng kiểm tra thư mục Spam/Junk trong email của bạn. Nếu vẫn không thấy, liên hệ đội hỗ trợ qua email support@example.com hoặc số điện thoại 0123 456 789 để được hỗ trợ.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Support Section -->
+            <section class="support-section">
+                <h2>Hỗ Trợ Khách Hàng</h2>
+                <div class="support-info">
+                    <h3>Thông Tin Liên Hệ</h3>
+                    <p><i class="fa-solid fa-envelope"></i>Email: Dicampuchiahong@example.com
+                    </p>
+                    <p><i class="fa-solid fa-phone"></i>Số điện thoại: +84 971305479</p>
+                    <p><i class="fa-solid fa-map-marker-alt"></i>Địa chỉ: 123 Đường ABC, Quận 1, TP. Hồ Chí Minh</p>
+                </div>
+                <div class="support-form">
+                    <h3>Gửi Câu Hỏi</h3>
+                    <div class="footer-section newsletter">
+                        <h3>Nếu bạn chưa có câu trả lời thỏa đán cho bản thân, Hãy liên hệ với chúng tôi để được hỗ trợ sớm nhât có thể</h3>
+                        <button type="submit"><a style=" color: white;text-decoration: none;" href="/contact">About Us</a></button>
+                    </div>
+                </div>
+            </section>
+
+            <script>
+                // FAQ Accordion
+                document.querySelectorAll('.faq-question').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const answer = item.nextElementSibling;
+                        const icon = item.querySelector('i');
+                        const isActive = answer.classList.contains('active');
+
+                        // Đóng tất cả các câu trả lời khác
+                        document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('active'));
+                        document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('active'));
+
+                        // Mở/đóng câu trả lời được nhấp
+                        if (!isActive) {
+                            answer.classList.add('active');
+                            item.classList.add('active');
+                        }
+                    });
+                });
+
+                // Form Validation and Submission
+                const supportForm = document.getElementById('supportForm');
+                supportForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    if (!validateForm()) return;
+
+                    const submitButton = document.getElementById('submitButton');
+                    const spinner = submitButton.querySelector('i');
+                    const btnText = document.getElementById('btnText');
+
+                    submitButton.disabled = true;
+                    spinner.style.display = 'inline-block';
+                    btnText.textContent = 'Đang gửi...';
+
+                    // Giả lập gửi form
+                    setTimeout(() => {
+                        submitButton.disabled = false;
+                        spinner.style.display = 'none';
+                        btnText.textContent = 'Gửi Câu Hỏi';
+                        alert('Câu hỏi đã được gửi!'); // Thay bằng thông báo thực tế
+                    }, 1000); // Thời gian giả lập
+                });
+
+                function validateForm() {
+                    const name = document.getElementById('name').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const message = document.getElementById('message').value.trim();
+
+                    const nameError = document.getElementById('nameError');
+                    const emailError = document.getElementById('emailError');
+                    const messageError = document.getElementById('messageError');
+
+                    let isValid = true;
+
+                    if (!name) {
+                        nameError.style.display = 'block';
+                        isValid = false;
+                    } else {
+                        nameError.style.display = 'none';
+                    }
+
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!email || !emailRegex.test(email)) {
+                        emailError.style.display = 'block';
+                        isValid = false;
+                    } else {
+                        emailError.style.display = 'none';
+                    }
+
+                    if (!message) {
+                        messageError.style.display = 'block';
+                        isValid = false;
+                    } else {
+                        messageError.style.display = 'none';
+                    }
+
+                    document.getElementById('submitButton').disabled = !isValid;
+                    return isValid;
+                }
+
+                // Real-time input validation
+                const inputs = document.querySelectorAll('.support-form input, .support-form textarea');
+                inputs.forEach(input => input.addEventListener('input', validateForm));
+
+                // Initial validation
+                validateForm();
+            </script>
+        </main>
+    </body>
+</html>
